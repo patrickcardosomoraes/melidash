@@ -107,6 +107,12 @@ const navItems: NavItem[] = [
     path: '/alerts',
     badge: 5,
   },
+  {
+    key: 'settings',
+    label: 'Configurações',
+    icon: Settings,
+    path: '/settings',
+  },
 ];
 
 export function Sidebar({ collapsed, onCollapse }: SidebarProps) {
