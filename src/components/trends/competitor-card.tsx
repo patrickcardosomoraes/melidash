@@ -69,7 +69,7 @@ export function CompetitorCard({ competitor }: CompetitorCardProps) {
             </CardTitle>
             <CardDescription className="flex items-center gap-2">
               <Badge 
-                variant={getStrategyColor(competitor.priceStrategy) as any}
+                variant={getStrategyColor(competitor.priceStrategy) as "default" | "secondary" | "destructive" | "outline"}
                 className="text-xs"
               >
                 {competitor.priceStrategy}

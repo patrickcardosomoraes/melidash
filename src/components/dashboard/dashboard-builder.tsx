@@ -42,7 +42,7 @@ interface WidgetConfig {
   priority?: string;
   view?: string;
   showTasks?: boolean;
-  icon?: any;
+  icon?: React.ComponentType<{ className?: string; size?: number | string }>;
 }
 
 interface Widget {
@@ -221,7 +221,7 @@ export function DashboardBuilder() {
               value: 'R$ 127.450',
               change: 12.5,
               color: 'green',
-              icon: 'DollarSign'
+              icon: DollarSign
             }
           },
           {
@@ -235,7 +235,7 @@ export function DashboardBuilder() {
               value: '1.847',
               change: 8.2,
               color: 'blue',
-              icon: 'ShoppingCart'
+              icon: ShoppingCart
             }
           },
           {
@@ -379,21 +379,8 @@ export function DashboardBuilder() {
       large: 'col-span-3 row-span-2'
     };
 
-    const getIcon = (iconName: string) => {
-      const icons: Record<string, React.ComponentType<{ className?: string }>> = {
-        DollarSign,
-        ShoppingCart,
-        Users,
-        TrendingUp,
-        BarChart3,
-        PieChart,
-        Package,
-        Star,
-        AlertTriangle,
-        Calendar
-      };
-      const Icon = icons[iconName] || BarChart3;
-      return <Icon className="h-4 w-4" />;
+    const getIcon = (IconComponent: React.ComponentType<{ className?: string; size?: number | string }>) => {
+      return <IconComponent className="h-4 w-4" />;
     };
 
     return (

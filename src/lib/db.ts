@@ -101,7 +101,11 @@ export const dbHelpers = {
     priority?: number;
   }) {
     return await db.automationRule.create({
-      data,
+      data: {
+        ...data,
+        conditions: JSON.stringify(data.conditions),
+        actions: JSON.stringify(data.actions),
+      },
     });
   },
 
@@ -113,9 +117,15 @@ export const dbHelpers = {
     actions: Record<string, unknown>;
     priority: number;
   }>) {
+    const { conditions, actions, ...otherData } = data;
+    const updateData = {
+      ...otherData,
+      ...(conditions && { conditions: JSON.stringify(conditions) }),
+      ...(actions && { actions: JSON.stringify(actions) }),
+    };
     return await db.automationRule.update({
       where: { id },
-      data,
+      data: updateData,
     });
   },
 
@@ -135,20 +145,33 @@ export const dbHelpers = {
     position: Record<string, unknown>;
     config: Record<string, unknown>;
   }) {
-    return await db.dashboardLayout.upsert({
+    // First try to find existing layout
+    const existing = await db.dashboardLayout.findFirst({
       where: {
-        userId_widgetId: {
-          userId: data.userId,
-          widgetId: data.widgetId,
-        },
+        userId: data.userId,
+        widgetId: data.widgetId,
       },
-      update: {
-        position: data.position,
-        config: data.config,
-        title: data.title,
-      },
-      create: data,
     });
+
+    if (existing) {
+      return await db.dashboardLayout.update({
+        where: { id: existing.id },
+        data: {
+          type: data.type,
+          title: data.title,
+          position: JSON.stringify(data.position),
+          config: JSON.stringify(data.config),
+        },
+      });
+    } else {
+      return await db.dashboardLayout.create({
+        data: {
+          ...data,
+          position: JSON.stringify(data.position),
+          config: JSON.stringify(data.config),
+        },
+      });
+    }
   },
 
   // Relatórios
@@ -160,11 +183,17 @@ export const dbHelpers = {
     data: Record<string, unknown>;
   }) {
     return await db.report.create({
-      data,
+      data: {
+        userId: data.userId,
+        name: data.name,
+        type: data.type,
+        filters: JSON.stringify(data.filters),
+        data: JSON.stringify(data.data),
+      },
     });
   },
 
-  async getUserReports(userId: string, type?: string) {
+  async getUserReports(userId: string, type?: 'SALES' | 'PRODUCTS' | 'PERFORMANCE' | 'TRENDS' | 'AUTOMATION') {
     return await db.report.findMany({
       where: {
         userId,

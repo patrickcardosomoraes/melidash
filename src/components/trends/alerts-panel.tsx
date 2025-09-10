@@ -270,7 +270,7 @@ export function AlertsPanel({ alerts, onMarkAsRead }: AlertsPanelProps) {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-2">
-                          <Badge variant={getSeverityColor(alert.severity) as any}>
+                          <Badge variant={getSeverityColor(alert.severity) as "default" | "secondary" | "destructive" | "outline"}>
                             {alert.severity}
                           </Badge>
                           <Badge variant="outline" className="text-xs">
@@ -359,7 +359,7 @@ export function AlertsPanel({ alerts, onMarkAsRead }: AlertsPanelProps) {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-2">
-                            <Badge variant={getSeverityColor(alert.severity) as any}>
+                            <Badge variant={getSeverityColor(alert.severity) as "default" | "secondary" | "destructive" | "outline"}>
                               {alert.severity}
                             </Badge>
                             <Badge variant="outline" className="text-xs">

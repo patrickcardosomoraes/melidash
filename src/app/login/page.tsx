@@ -19,7 +19,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   
-  const { login } = useAuthStore();
+  const { login, loginWithCredentials } = useAuthStore();
   const { login: mlLogin, isLoading: mlLoading } = useMercadoLivreAuth();
   const router = useRouter();
 
@@ -44,12 +44,7 @@ export default function LoginPage() {
       );
 
       if (user) {
-        login({
-          id: '1',
-          email: user.email,
-          role: user.role,
-          name: user.role === 'admin' ? 'Administrador' : 'Operador',
-        });
+        await loginWithCredentials(user.email, password);
         router.push('/dashboard');
       } else {
         setError('Email ou senha inválidos');

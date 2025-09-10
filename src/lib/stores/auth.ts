@@ -133,7 +133,7 @@ export const useAuthStore = create<AuthStore>()(persist(
 
     refreshToken: async () => {
       const { token } = get();
-      if (!token?.refresh_token) return;
+      if (!token?.refreshToken) return;
 
       try {
         const response = await fetch('/api/auth/refresh', {

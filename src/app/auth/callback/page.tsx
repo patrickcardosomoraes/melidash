@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getMercadoLivreAPI } from '@/lib/api/mercado-livre';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,7 +18,7 @@ interface UserInfo {
   last_name?: string;
 }
 
-export default function AuthCallbackPage() {
+function AuthCallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [authState, setAuthState] = useState<AuthState>('loading');
@@ -53,8 +53,15 @@ export default function AuthCallbackPage() {
         localStorage.setItem('ml_user_id', tokenData.userId.toString());
 
         // Obter informações do usuário
-        const user = await mlApi.getUserInfo();
-        setUserInfo(user);
+        const mlUser = await mlApi.getUserInfo();
+        const userInfo: UserInfo = {
+          id: mlUser.id.toString(),
+          nickname: mlUser.nickname,
+          email: mlUser.email,
+          first_name: mlUser.firstName,
+          last_name: mlUser.lastName
+        };
+        setUserInfo(userInfo);
 
         setAuthState('success');
 
@@ -95,7 +102,7 @@ export default function AuthCallbackPage() {
               </p>
               {userInfo && (
                 <div className="text-sm text-muted-foreground space-y-1">
-                  <p>Bem-vindo, {userInfo.firstName} {userInfo.lastName}!</p>
+                  <p>Bem-vindo, {userInfo.first_name} {userInfo.last_name}!</p>
                   <p>Nickname: @{userInfo.nickname}</p>
                 </div>
               )}
@@ -152,5 +159,27 @@ export default function AuthCallbackPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function AuthCallbackPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <CardTitle>Autenticação Mercado Livre</CardTitle>
+            <CardDescription>
+              Carregando...
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="text-center">
+            <Loader2 className="h-8 w-8 animate-spin mx-auto" />
+          </CardContent>
+        </Card>
+      </div>
+    }>
+      <AuthCallbackContent />
+    </Suspense>
   );
 }

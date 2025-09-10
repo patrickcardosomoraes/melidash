@@ -53,7 +53,7 @@ export function PricingRuleCard({ rule, onToggle, onDelete, onEdit }: PricingRul
     }
   };
 
-  const getConditionDescription = (condition: any) => {
+  const getConditionDescription = (condition: { type: string; operator?: string; value?: string | number | boolean; startTime?: string; endTime?: string }) => {
     switch (condition.type) {
       case 'competitor_price':
         return `Preço concorrente ${condition.operator} R$ ${condition.value}`;
@@ -68,10 +68,10 @@ export function PricingRuleCard({ rule, onToggle, onDelete, onEdit }: PricingRul
     }
   };
 
-  const getActionDescription = (action: any) => {
+  const getActionDescription = (action: { type: string; value: string | number }) => {
     switch (action.type) {
       case 'percentage_change':
-        const percentValue = Number(action.value);
+        const percentValue = typeof action.value === 'string' ? Number(action.value) : action.value;
         return `${percentValue > 0 ? 'Aumentar' : 'Reduzir'} ${Math.abs(percentValue)}%`;
       case 'fixed_amount':
         const amountValue = Number(action.value);
@@ -92,8 +92,8 @@ export function PricingRuleCard({ rule, onToggle, onDelete, onEdit }: PricingRul
           <div className="space-y-1">
             <CardTitle className="flex items-center gap-2">
               {rule.name}
-              <Badge variant={getPriorityColor(rule.priority)} className="text-xs">
-                {rule.priority === 'high' ? 'Alta' : rule.priority === 'medium' ? 'Média' : 'Baixa'}
+              <Badge variant={getPriorityColor(rule.priority.toString())} className="text-xs">
+                Prioridade {rule.priority}
               </Badge>
             </CardTitle>
             <CardDescription>{rule.description}</CardDescription>

@@ -53,7 +53,7 @@ export function CreateRuleDialog({ open, onOpenChange, onRuleCreated }: CreateRu
     setConditions([...conditions, newCondition]);
   };
 
-  const updateCondition = (index: number, field: keyof PricingCondition, value: any) => {
+  const updateCondition = (index: number, field: keyof PricingCondition, value: string | number) => {
     const updatedConditions = [...conditions];
     updatedConditions[index] = { ...updatedConditions[index], [field]: value };
     setConditions(updatedConditions);
@@ -73,7 +73,7 @@ export function CreateRuleDialog({ open, onOpenChange, onRuleCreated }: CreateRu
     setActions([...actions, newAction]);
   };
 
-  const updateAction = (index: number, field: keyof PricingAction, value: any) => {
+  const updateAction = (index: number, field: keyof PricingAction, value: string | number) => {
     const updatedActions = [...actions];
     updatedActions[index] = { ...updatedActions[index], [field]: value };
     setActions(updatedActions);
@@ -241,7 +241,7 @@ export function CreateRuleDialog({ open, onOpenChange, onRuleCreated }: CreateRu
                     <Input
                       type="number"
                       placeholder="Valor"
-                      value={condition.value}
+                      value={typeof condition.value === 'boolean' ? '' : condition.value}
                       onChange={(e) => updateCondition(index, 'value', Number(e.target.value))}
                     />
                   </div>
