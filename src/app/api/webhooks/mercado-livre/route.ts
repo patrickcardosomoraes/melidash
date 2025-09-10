@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { headers } from 'next/headers';
+import { validateWebhookData, sanitizeString, validatePayloadSize } from '@/lib/security/validation';
 
 // Tipos de notificações do Mercado Livre
 interface MLNotification {
@@ -29,6 +30,13 @@ export async function POST(request: NextRequest) {
     const userAgent = headersList.get('user-agent');
     const contentType = headersList.get('content-type');
 
+    // Verificar tamanho do payload
+    const rawBody = await request.text();
+    if (!validatePayloadSize(rawBody, 50)) { // 50KB max
+      console.warn('Webhook payload too large');
+      return NextResponse.json({ error: 'Payload too large' }, { status: 413 });
+    }
+
     // Verificar se a requisição vem do Mercado Livre
     if (!userAgent?.includes('MercadoLibre')) {
       console.warn('Webhook rejeitado: User-Agent inválido');
@@ -46,7 +54,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const notification: MLNotification = await request.json();
+    const notification: MLNotification = JSON.parse(rawBody);
+
+    // Validar e sanitizar dados do webhook
+    const validation = validateWebhookData(notification);
+    if (!validation.success) {
+      console.warn('Invalid webhook data:', validation.error);
+      return NextResponse.json({ error: 'Invalid webhook data' }, { status: 400 });
+    }
 
     // Validar estrutura da notificação
     if (!notification.resource || !notification.topic || !notification.user_id) {
@@ -57,9 +72,9 @@ export async function POST(request: NextRequest) {
     }
 
     console.log('Notificação recebida:', {
-      id: notification._id,
-      topic: notification.topic,
-      resource: notification.resource,
+      id: sanitizeString(notification._id),
+      topic: sanitizeString(notification.topic),
+      resource: sanitizeString(notification.resource),
       userId: notification.user_id,
       received: new Date().toISOString()
     });

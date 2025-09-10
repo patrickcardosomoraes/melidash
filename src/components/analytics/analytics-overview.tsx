@@ -17,6 +17,7 @@ import {
   Download,
   Filter,
 } from 'lucide-react';
+import { getConfig } from '@/lib/config/production';
 
 interface AnalyticsData {
   revenue: {
@@ -86,9 +87,21 @@ export function AnalyticsOverview() {
   const [selectedPeriod, setSelectedPeriod] = useState('30d');
 
   useEffect(() => {
+    const config = getConfig();
+    
     // Simular carregamento de dados
     const timer = setTimeout(() => {
-      setData(mockAnalyticsData);
+      if (config.USE_MOCK_DATA) {
+        setData(mockAnalyticsData);
+      } else {
+        // Em produção, inicializar com dados vazios
+        setData({
+          revenue: { current: 0, previous: 0, change: 0 },
+          orders: { current: 0, previous: 0, change: 0 },
+          visitors: { current: 0, previous: 0, change: 0 },
+          conversion: { current: 0, previous: 0, change: 0 }
+        });
+      }
       setLoading(false);
     }, 1000);
 

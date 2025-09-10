@@ -15,6 +15,7 @@ import {
   mockCompetitors,
   mockMarketTrends
 } from '@/types/trends';
+import { getConfig } from '@/lib/config/production';
 
 export class TrendsService {
   private static instance: TrendsService;
@@ -43,8 +44,11 @@ export class TrendsService {
       }
     };
     
-    // Inicializar com dados mock
-    this.loadMockData();
+    const config = getConfig();
+    if (config.USE_MOCK_DATA) {
+      // Inicializar com dados mock apenas em desenvolvimento
+      this.loadMockData();
+    }
   }
 
   public static getInstance(): TrendsService {

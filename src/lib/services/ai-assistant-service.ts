@@ -9,12 +9,22 @@ import {
   mockAIAnalyses,
   defaultAISettings
 } from '@/types/ai-assistant';
+import { getConfig } from '@/lib/config/production';
 
 export class AIAssistantService {
-  private insights: AIInsight[] = [...mockAIInsights];
-  private chats: AIChat[] = [...mockAIChats];
-  private analyses: AIAnalysis[] = [...mockAIAnalyses];
+  private insights: AIInsight[] = [];
+  private chats: AIChat[] = [];
+  private analyses: AIAnalysis[] = [];
   private settings: AISettings = { ...defaultAISettings };
+
+  constructor() {
+    const config = getConfig();
+    if (config.USE_MOCK_DATA) {
+      this.insights = [...mockAIInsights];
+      this.chats = [...mockAIChats];
+      this.analyses = [...mockAIAnalyses];
+    }
+  }
 
   // Insights Management
   async getInsights(filters?: {

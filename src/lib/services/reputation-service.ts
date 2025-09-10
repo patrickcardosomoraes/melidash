@@ -6,18 +6,45 @@ import {
   ReputationTrend,
   ReviewCategory,
   SellerResponse,
+  ReputationSettings,
+  defaultReputationSettings,
   mockReputationMetrics,
   mockReviews,
   mockReputationAlerts,
   mockReputationTrends
 } from '@/types/reputation';
+import { getConfig } from '@/lib/config/production';
 
 export class ReputationService {
-  private metrics: ReputationMetrics = mockReputationMetrics;
-  private reviews: Review[] = mockReviews;
-  private alerts: ReputationAlert[] = mockReputationAlerts;
-  private trends: ReputationTrend[] = mockReputationTrends;
+  private metrics: ReputationMetrics;
+  private reviews: Review[] = [];
+  private alerts: ReputationAlert[] = [];
+  private trends: ReputationTrend[] = [];
   private goals: ReputationGoal[] = [];
+  private settings: ReputationSettings = { ...defaultReputationSettings };
+
+  constructor() {
+    const config = getConfig();
+    if (config.USE_MOCK_DATA) {
+      this.metrics = mockReputationMetrics;
+      this.reviews = mockReviews;
+      this.alerts = mockReputationAlerts;
+      this.trends = mockReputationTrends;
+    } else {
+      // Inicializar com dados vazios em produção
+      this.metrics = {
+        overall: 0,
+        delivery: 0,
+        communication: 0,
+        productQuality: 0,
+        customerService: 0,
+        totalReviews: 0,
+        averageRating: 0,
+        responseRate: 0,
+        lastUpdated: new Date()
+      };
+    }
+  }
 
   // Métricas de reputação
   async getReputationMetrics(): Promise<ReputationMetrics> {

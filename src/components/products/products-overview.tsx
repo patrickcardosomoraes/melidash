@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { useMercadoLivreAuth } from '@/hooks/use-mercado-livre-auth';
+import { getConfig } from '@/lib/config/production';
 import { 
   Package, 
   Search, 
@@ -128,18 +130,56 @@ const getTrendIcon = (trend: string) => {
 
 export function ProductsOverview() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'paused' | 'ended'>('all');
+  const [sortBy, setSortBy] = useState<'title' | 'price' | 'stock' | 'sales'>('title');
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { mlApi } = useMercadoLivreAuth();
+  const config = getConfig();
 
-  const filteredProducts = mockProducts.filter(product => {
-    const matchesSearch = product.title.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = selectedStatus === 'all' || product.status === selectedStatus;
+  useEffect(() => {
+    const loadProducts = async () => {
+      if (config.USE_MOCK_DATA) {
+        // Usar dados mock em desenvolvimento
+        setProducts(mockProducts);
+        setLoading(false);
+      } else {
+        // Usar API real em produção
+        try {
+          if (mlApi) {
+            const response = await mlApi.getMyProducts();
+            setProducts(response.results || []);
+          }
+        } catch (error) {
+          console.error('Erro ao carregar produtos:', error);
+          setProducts([]);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadProducts();
+  }, [mlApi, config.USE_MOCK_DATA]);
+
+  const filteredProducts = products.filter(product => {
+    const matchesSearch = product.title?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === 'all' || product.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
-  const totalProducts = mockProducts.length;
-  const activeProducts = mockProducts.filter(p => p.status === 'active').length;
-  const lowStockProducts = mockProducts.filter(p => p.stock < 5).length;
-  const totalViews = mockProducts.reduce((sum, p) => sum + p.views, 0);
+  const totalProducts = products.length;
+  const activeProducts = products.filter(p => p.status === 'active').length;
+  const lowStockProducts = products.filter(p => (p.available_quantity || p.stock || 0) < 5).length;
+  const totalViews = products.reduce((sum, p) => sum + (p.views || 0), 0);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

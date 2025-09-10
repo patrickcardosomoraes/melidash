@@ -55,34 +55,9 @@ export const useAuthStore = create<AuthStore>()(persist(
     loginWithCredentials: async (email: string, _password: string) => {
       set({ isLoading: true, error: null });
       try {
-        // Aqui seria feita a chamada para a API de autenticação
-        // Por enquanto, simulamos um login bem-sucedido
-        const user: User = {
-          id: '1',
-          email,
-          mlUserId: '1',
-          role: 'operator',
-          subscription: 'free',
-          settings: {
-            theme: 'light',
-            notifications: {
-              email: true,
-              push: true,
-              sms: false,
-            },
-            dashboard: {
-              layout: [],
-              refreshInterval: 30000,
-            },
-          },
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        };
-        set({
-          user,
-          isAuthenticated: true,
-          isLoading: false,
-        });
+        // Em produção, esta função não deve ser usada
+        // Manter apenas para compatibilidade com código existente
+        throw new Error('Login com credenciais não disponível em produção. Use o Mercado Livre.');
       } catch (error) {
         set({
           error: error instanceof Error ? error.message : 'Erro no login',

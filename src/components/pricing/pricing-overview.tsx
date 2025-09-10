@@ -21,13 +21,14 @@ import {
   BarChart3
 } from 'lucide-react';
 import { mockPricingRules, PricingRule, PricingExecution, PricingAlert } from '@/types/pricing';
+import { getConfig } from '@/lib/config/production';
 import { PricingRuleCard } from './pricing-rule-card';
 import { PricingMetrics } from './pricing-metrics';
 import { PricingHistory } from './pricing-history';
 import { CreateRuleDialog } from './create-rule-dialog';
 
 export function PricingOverview() {
-  const [rules, setRules] = useState<PricingRule[]>(mockPricingRules);
+  const [rules, setRules] = useState<PricingRule[]>([]);
   const [executions, setExecutions] = useState<PricingExecution[]>([]);
   const [alerts, setAlerts] = useState<PricingAlert[]>([]);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
@@ -35,6 +36,8 @@ export function PricingOverview() {
 
   // Simular dados de execução e alertas
   useEffect(() => {
+    const config = getConfig();
+    
     // Mock executions
     const mockExecutions: PricingExecution[] = [
       {
@@ -103,8 +106,11 @@ export function PricingOverview() {
       }
     ];
 
-    setExecutions(mockExecutions);
-    setAlerts(mockAlerts);
+    if (config.USE_MOCK_DATA) {
+      setRules(mockPricingRules);
+      setExecutions(mockExecutions);
+      setAlerts(mockAlerts);
+    }
   }, []);
 
   const toggleRule = (ruleId: string) => {
