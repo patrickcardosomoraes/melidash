@@ -25,7 +25,7 @@ type MLTopic =
 
 export async function POST(request: NextRequest) {
   try {
-    const headersList = headers();
+    const headersList = await headers();
     const userAgent = headersList.get('user-agent');
     const contentType = headersList.get('content-type');
 
