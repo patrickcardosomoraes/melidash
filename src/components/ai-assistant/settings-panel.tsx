@@ -8,16 +8,12 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-import { Textarea } from '@/components/ui/textarea';
 import {
   Settings,
   Bot,
   Bell,
   Shield,
-  Zap,
-  Brain,
   MessageSquare,
-  BarChart3,
   Save,
   RotateCcw,
   AlertCircle
@@ -52,9 +48,9 @@ export function SettingsPanel({ onRefresh }: SettingsPanelProps) {
 
   useEffect(() => {
     loadSettings();
-  }, []);
+  }, [loadSettings]);
 
-  const handleSettingChange = (key: keyof AISettings, value: any) => {
+  const handleSettingChange = (key: keyof AISettings, value: boolean | string | number | AISettings['focusAreas'] | AISettings['notificationPreferences']) => {
     if (!settings) return;
     
     setSettings(prev => ({

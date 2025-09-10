@@ -52,7 +52,7 @@ export const useAuthStore = create<AuthStore>()(persist(
       });
     },
 
-    loginWithCredentials: async (email: string, password: string) => {
+    loginWithCredentials: async (email: string, _password: string) => {
       set({ isLoading: true, error: null });
       try {
         // Aqui seria feita a chamada para a API de autenticação

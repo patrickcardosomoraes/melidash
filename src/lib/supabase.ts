@@ -90,8 +90,8 @@ export interface Database {
           name: string;
           description: string;
           is_active: boolean;
-          conditions: any;
-          actions: any;
+          conditions: Record<string, unknown>;
+          actions: Record<string, unknown>;
           created_at: string;
           updated_at: string;
         };
@@ -101,8 +101,8 @@ export interface Database {
           name: string;
           description: string;
           is_active?: boolean;
-          conditions: any;
-          actions: any;
+          conditions: Record<string, unknown>;
+          actions: Record<string, unknown>;
           created_at?: string;
           updated_at?: string;
         };
@@ -112,8 +112,8 @@ export interface Database {
           name?: string;
           description?: string;
           is_active?: boolean;
-          conditions?: any;
-          actions?: any;
+          conditions?: Record<string, unknown>;
+          actions?: Record<string, unknown>;
           created_at?: string;
           updated_at?: string;
         };

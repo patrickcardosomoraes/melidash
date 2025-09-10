@@ -11,7 +11,6 @@ import {
   Package,
   DollarSign,
   Users,
-  TrendingUp,
   Plus,
   Eye,
   CheckCircle,
@@ -26,7 +25,7 @@ interface AnalysisPanelProps {
   onRefresh: () => void;
 }
 
-export function AnalysisPanel({ onRefresh }: AnalysisPanelProps) {
+export function AnalysisPanel({ onRefresh: _ }: AnalysisPanelProps) {
   const [analyses, setAnalyses] = useState<AIAnalysis[]>([]);
   const [selectedAnalysis, setSelectedAnalysis] = useState<AIAnalysis | null>(null);
   const [loading, setLoading] = useState(true);
@@ -49,7 +48,7 @@ export function AnalysisPanel({ onRefresh }: AnalysisPanelProps) {
 
   useEffect(() => {
     loadAnalyses();
-  }, []);
+  }, [loadAnalyses]);
 
   const filteredAnalyses = analyses.filter(analysis => {
     if (filter === 'all') return true;

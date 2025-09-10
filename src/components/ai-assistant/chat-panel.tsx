@@ -15,13 +15,13 @@ import {
   Trash2
 } from 'lucide-react';
 import { getAIAssistantService } from '@/lib/services/ai-assistant-service';
-import { AIChat, AIChatMessage } from '@/types/ai-assistant';
+import { AIChat } from '@/types/ai-assistant';
 
 interface ChatPanelProps {
   onRefresh: () => void;
 }
 
-export function ChatPanel({ onRefresh }: ChatPanelProps) {
+export function ChatPanel({ onRefresh: _ }: ChatPanelProps) {
   const [chats, setChats] = useState<AIChat[]>([]);
   const [activeChat, setActiveChat] = useState<AIChat | null>(null);
   const [message, setMessage] = useState('');
@@ -48,7 +48,7 @@ export function ChatPanel({ onRefresh }: ChatPanelProps) {
 
   useEffect(() => {
     loadChats();
-  }, []);
+  }, [loadChats]);
 
   useEffect(() => {
     scrollToBottom();
@@ -75,7 +75,7 @@ export function ChatPanel({ onRefresh }: ChatPanelProps) {
 
     try {
       setSendingMessage(true);
-      const response = await aiService.sendMessage(activeChat.id, message.trim());
+      await aiService.sendMessage(activeChat.id, message.trim());
       
       // Update the active chat with new messages
       const updatedChat = await aiService.getChatById(activeChat.id);

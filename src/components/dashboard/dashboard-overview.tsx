@@ -105,7 +105,6 @@ function AlertCard({ title, description, severity, count }: AlertCardProps) {
 }
 
 export function DashboardOverview() {
-  const { layout } = useDashboardStore();
 
   // Mock data - em produção viria da API
   const metrics = {

@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
@@ -15,8 +15,7 @@ import {
   Settings, 
   Save, 
   Eye, 
-  Trash2, 
-  Move,
+  Trash2,
   BarChart3,
   PieChart,
   TrendingUp,
@@ -26,11 +25,25 @@ import {
   Package,
   Star,
   AlertTriangle,
-  Calendar,
-  Clock,
-  Target,
-  Zap
+  Calendar
 } from 'lucide-react';
+
+interface WidgetConfig {
+  value?: string;
+  change?: number;
+  color?: string;
+  chartType?: string;
+  period?: string;
+  limit?: number;
+  columns?: string[];
+  current?: number;
+  target?: number;
+  maxAlerts?: number;
+  priority?: string;
+  view?: string;
+  showTasks?: boolean;
+  icon?: any;
+}
 
 interface Widget {
   id: string;
@@ -38,7 +51,7 @@ interface Widget {
   title: string;
   size: 'small' | 'medium' | 'large';
   position: { x: number; y: number };
-  config: Record<string, any>;
+  config: WidgetConfig;
   enabled: boolean;
 }
 
@@ -418,12 +431,14 @@ export function DashboardBuilder() {
           {widget.type === 'metric' && (
             <div>
               <div className="text-2xl font-bold">{widget.config.value}</div>
-              <p className="text-xs text-muted-foreground">
-                <span className={widget.config.change > 0 ? 'text-green-600' : 'text-red-600'}>
-                  {widget.config.change > 0 ? '+' : ''}{widget.config.change}%
-                </span>
-                {' '}desde o período anterior
-              </p>
+              {widget.config.change !== undefined && (
+                <p className="text-xs text-muted-foreground">
+                  <span className={widget.config.change > 0 ? 'text-green-600' : 'text-red-600'}>
+                    {widget.config.change > 0 ? '+' : ''}{widget.config.change}%
+                  </span>
+                  {' '}desde o período anterior
+                </p>
+              )}
             </div>
           )}
           

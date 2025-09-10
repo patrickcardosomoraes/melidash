@@ -19,7 +19,7 @@ export interface PricingCondition {
   id: string;
   type: ConditionType;
   operator: ConditionOperator;
-  value: any;
+  value: string | number | boolean;
   field: string;
 }
 
@@ -99,7 +99,7 @@ export interface PricingExecution {
   newPrice: number;
   reason: string;
   error?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, string | number | boolean>;
 }
 
 export type ExecutionStatus = 
@@ -192,7 +192,7 @@ export interface PricingAlert {
   severity: AlertSeverity;
   productId: string;
   message: string;
-  data: Record<string, any>;
+  data: Record<string, string | number | boolean>;
   createdAt: Date;
   isRead: boolean;
   actionRequired: boolean;

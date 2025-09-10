@@ -23,7 +23,7 @@ export interface DashboardCardProps extends BaseComponentProps {
 }
 
 export interface ChartProps extends BaseComponentProps {
-  data: any[];
+  data: Record<string, unknown>[];
   type: 'line' | 'bar' | 'pie' | 'area' | 'scatter';
   xKey: string;
   yKey: string;
@@ -66,17 +66,17 @@ export interface SelectOption {
 }
 
 // Table Component Types
-export interface TableColumn<T = any> {
+export interface TableColumn<T = Record<string, unknown>> {
   key: keyof T | string;
   title: string;
   width?: number | string;
   align?: 'left' | 'center' | 'right';
   sortable?: boolean;
   filterable?: boolean;
-  render?: (value: any, record: T, index: number) => ReactNode;
+  render?: (value: unknown, record: T, index: number) => ReactNode;
 }
 
-export interface TableProps<T = any> extends BaseComponentProps {
+export interface TableProps<T = Record<string, unknown>> extends BaseComponentProps {
   columns: TableColumn<T>[];
   data: T[];
   loading?: boolean;
@@ -146,7 +146,7 @@ export interface LoadingProps extends BaseComponentProps {
 export interface DragItem {
   id: string;
   type: string;
-  data: any;
+  data: Record<string, unknown>;
 }
 
 export interface DropZoneProps extends BaseComponentProps {
@@ -167,8 +167,8 @@ export interface FilterOption {
 
 export interface FilterProps extends BaseComponentProps {
   options: FilterOption[];
-  values: Record<string, any>;
-  onChange: (values: Record<string, any>) => void;
+  values: Record<string, unknown>;
+  onChange: (values: Record<string, unknown>) => void;
   onReset: () => void;
   loading?: boolean;
 }

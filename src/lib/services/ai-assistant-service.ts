@@ -1,6 +1,5 @@
 import {
   AIInsight,
-  AIRecommendation,
   AIChat,
   AIChatMessage,
   AIAnalysis,
@@ -64,7 +63,7 @@ export class AIAssistantService {
     await this.updateInsightStatus(id, 'dismissed');
   }
 
-  async applyRecommendation(insightId: string, recommendationId: string): Promise<void> {
+  async applyRecommendation(insightId: string, _recommendationId: string): Promise<void> {
     await this.simulateDelay();
     await this.updateInsightStatus(insightId, 'applied');
     // Here you would implement the actual recommendation application logic
@@ -128,7 +127,7 @@ export class AIAssistantService {
     return assistantMessage;
   }
 
-  private async generateAIResponse(userMessage: string, context: AIChat['context']): Promise<string> {
+  private async generateAIResponse(userMessage: string, _context: AIChat['context']): Promise<string> {
     // Simulate AI processing time
     await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
     

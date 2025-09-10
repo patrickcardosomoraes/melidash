@@ -51,7 +51,7 @@ export interface CompetitorProduct {
   lastUpdated: Date;
   url: string;
   images: string[];
-  specifications?: Record<string, any>;
+  specifications?: Record<string, string | number | boolean>;
 }
 
 export type PriceStrategy = 
@@ -67,7 +67,7 @@ export interface CompetitorAlert {
   severity: AlertSeverity;
   message: string;
   productId?: string;
-  data: Record<string, any>;
+  data: Record<string, string | number | boolean>;
   createdAt: Date;
   isRead: boolean;
 }

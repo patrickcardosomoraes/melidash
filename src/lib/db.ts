@@ -96,8 +96,8 @@ export const dbHelpers = {
     userId: string;
     name: string;
     description: string;
-    conditions: any;
-    actions: any;
+    conditions: Record<string, unknown>;
+    actions: Record<string, unknown>;
     priority?: number;
   }) {
     return await db.automationRule.create({
@@ -109,8 +109,8 @@ export const dbHelpers = {
     name: string;
     description: string;
     isActive: boolean;
-    conditions: any;
-    actions: any;
+    conditions: Record<string, unknown>;
+    actions: Record<string, unknown>;
     priority: number;
   }>) {
     return await db.automationRule.update({
@@ -132,8 +132,8 @@ export const dbHelpers = {
     widgetId: string;
     type: string;
     title: string;
-    position: any;
-    config: any;
+    position: Record<string, unknown>;
+    config: Record<string, unknown>;
   }) {
     return await db.dashboardLayout.upsert({
       where: {
@@ -156,8 +156,8 @@ export const dbHelpers = {
     userId: string;
     name: string;
     type: 'SALES' | 'PRODUCTS' | 'PERFORMANCE' | 'TRENDS' | 'AUTOMATION';
-    filters: any;
-    data: any;
+    filters: Record<string, unknown>;
+    data: Record<string, unknown>;
   }) {
     return await db.report.create({
       data,
@@ -168,7 +168,7 @@ export const dbHelpers = {
     return await db.report.findMany({
       where: {
         userId,
-        ...(type && { type: type as any }),
+        ...(type && { type }),
       },
       orderBy: { createdAt: 'desc' },
     });

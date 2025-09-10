@@ -207,7 +207,7 @@ export class MercadoLivreAPI {
   }
 
   // Obter métricas de reputação
-  async getReputationMetrics(): Promise<any> {
+  async getReputationMetrics(): Promise<Record<string, unknown>> {
     const userInfo = await this.getUserInfo();
     return this.makeAuthenticatedRequest(`/users/${userInfo.id}/reputation`);
   }
@@ -234,12 +234,12 @@ export class MercadoLivreAPI {
   }
 
   // Obter categorias
-  async getCategories(): Promise<any[]> {
+  async getCategories(): Promise<Record<string, unknown>[]> {
     return this.makeAuthenticatedRequest('/sites/MLB/categories');
   }
 
   // Obter tendências de uma categoria
-  async getCategoryTrends(categoryId: string): Promise<any> {
+  async getCategoryTrends(categoryId: string): Promise<Record<string, unknown>> {
     return this.makeAuthenticatedRequest(`/trends/MLB/${categoryId}`);
   }
 }

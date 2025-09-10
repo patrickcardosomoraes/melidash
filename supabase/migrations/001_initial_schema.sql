@@ -1,5 +1,5 @@
--- Enable UUID extension
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+-- Enable UUID extension (using gen_random_uuid which is built-in)
+-- CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Create custom types
 CREATE TYPE subscription_type AS ENUM ('FREE', 'PRO', 'ENTERPRISE');
@@ -8,7 +8,7 @@ CREATE TYPE report_type AS ENUM ('SALES', 'PRODUCTS', 'PERFORMANCE', 'TRENDS', '
 
 -- Users table
 CREATE TABLE users (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     email VARCHAR(255) UNIQUE NOT NULL,
     ml_user_id VARCHAR(255),
     ml_access_token TEXT,
@@ -20,7 +20,7 @@ CREATE TABLE users (
 
 -- Products table
 CREATE TABLE products (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     ml_id VARCHAR(255) NOT NULL,
     title VARCHAR(500) NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE products (
 
 -- Automation rules table
 CREATE TABLE automation_rules (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     name VARCHAR(255) NOT NULL,
     description TEXT,
@@ -48,7 +48,7 @@ CREATE TABLE automation_rules (
 
 -- Dashboard layouts table
 CREATE TABLE dashboard_layouts (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     widget_id VARCHAR(255) NOT NULL,
     type VARCHAR(100) NOT NULL,
@@ -63,7 +63,7 @@ CREATE TABLE dashboard_layouts (
 
 -- Reports table
 CREATE TABLE reports (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     name VARCHAR(255) NOT NULL,
     type report_type NOT NULL,

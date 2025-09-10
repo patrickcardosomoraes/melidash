@@ -54,7 +54,7 @@ export interface AIChatMessage {
   timestamp: Date;
   attachments?: {
     type: 'chart' | 'table' | 'image';
-    data: any;
+    data: Record<string, unknown>;
     title: string;
   }[];
 }

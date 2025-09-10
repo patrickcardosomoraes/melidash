@@ -10,15 +10,15 @@ export interface ApiConfig {
 export interface ApiRequest {
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
   url: string;
-  data?: any;
-  params?: Record<string, any>;
+  data?: Record<string, unknown>;
+  params?: Record<string, string | number | boolean>;
   headers?: Record<string, string>;
 }
 
 export interface ApiError {
   code: string;
   message: string;
-  details?: any;
+  details?: Record<string, unknown>;
   status: number;
 }
 
@@ -128,7 +128,7 @@ export interface CacheEntry<T> {
 export interface QueueJob {
   id: string;
   type: string;
-  data: any;
+  data: Record<string, unknown>;
   priority: number;
   attempts: number;
   maxAttempts: number;
@@ -244,10 +244,10 @@ export interface MLProduct {
     id: string;
   }>;
   acceptsMercadopago: boolean;
-  nonMercadopagoPaymentMethods: any[];
+  nonMercadopagoPaymentMethods: Record<string, unknown>[];
   shipping: {
     mode: string;
-    methods: any[];
+    methods: Record<string, unknown>[];
     tags: string[];
     dimensions?: string;
     localPickUp: boolean;
@@ -285,23 +285,23 @@ export interface MLProduct {
     };
     id: number;
   };
-  sellerContact?: any;
-  location: any;
+  sellerContact?: Record<string, unknown>;
+  location: Record<string, unknown>;
   attributes: Array<{
     id: string;
     name: string;
     valueId?: string;
     valueName?: string;
-    valueStruct?: any;
+    valueStruct?: Record<string, unknown>;
     values: Array<{
       id?: string;
       name?: string;
-      struct?: any;
+      struct?: Record<string, unknown>;
     }>;
     attributeGroupId: string;
     attributeGroupName: string;
   }>;
-  warnings: any[];
+  warnings: Record<string, unknown>[];
   listingSource: string;
   variations: Array<{
     id: number;
@@ -323,7 +323,7 @@ export interface MLProduct {
   catalogProductId?: string;
   domainId: string;
   parentItemId?: string;
-  differentialPricing?: any;
+  differentialPricing?: Record<string, unknown>;
   dealIds: string[];
   automaticRelist: boolean;
   dateCreated: string;
@@ -337,7 +337,7 @@ export interface MLOrder {
   id: number;
   dateCreated: string;
   dateLastUpdated: string;
-  mediations: any[];
+  mediations: Record<string, unknown>[];
   fulfillment: {
     id: number;
     shipmentId: number;
@@ -448,8 +448,8 @@ export interface MLOrder {
     dateLastUpdated: string;
   }>;
   feedback: {
-    buyer?: any;
-    seller?: any;
+    buyer?: Record<string, unknown>;
+    seller?: Record<string, unknown>;
   };
   context: {
     channel: string;
@@ -463,19 +463,19 @@ export interface MLOrder {
       categoryId: string;
       variationId?: number;
       sellerId: number;
-      variationAttributes: any[];
+      variationAttributes: Record<string, unknown>[];
     };
     quantity: number;
     unitPrice: number;
     fullUnitPrice: number;
     currencyId: string;
     manufacturingDays?: number;
-    saleTerms: any[];
+    saleTerms: Record<string, unknown>[];
   }>;
   currencyId: string;
   orderRequest: {
-    return?: any;
-    change?: any;
+    return?: Record<string, unknown>;
+    change?: Record<string, unknown>;
   };
   expiredDate: string;
   orderType: string;

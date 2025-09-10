@@ -4,8 +4,10 @@ import {
   CompetitorData, 
   PricingRecommendation,
   PricingAlert,
-  ExecutionStatus,
-  ValidationResult
+  ValidationResult,
+  PricingCondition,
+  PricingAction,
+  PricingLimits
 } from '@/types/pricing';
 import { MLProduct } from '@/types/api';
 import { getMercadoLivreAPI } from '@/lib/api/mercado-livre';
@@ -131,7 +133,7 @@ export class PricingAutomationService {
   }
 
   // Avaliar condições da regra
-  private async evaluateConditions(conditions: any[], product: MLProduct): Promise<ValidationResult> {
+  private async evaluateConditions(conditions: PricingCondition[], product: MLProduct): Promise<ValidationResult> {
     const result: ValidationResult = {
       isValid: true,
       errors: [],
@@ -151,7 +153,7 @@ export class PricingAutomationService {
   }
 
   // Avaliar uma condição específica
-  private async evaluateCondition(condition: any, product: MLProduct): Promise<boolean> {
+  private async evaluateCondition(condition: PricingCondition, product: MLProduct): Promise<boolean> {
     switch (condition.type) {
       case 'competitor_price':
         return this.evaluateCompetitorPriceCondition(condition, product);
@@ -175,7 +177,7 @@ export class PricingAutomationService {
   }
 
   // Avaliar condição de preço de concorrente
-  private async evaluateCompetitorPriceCondition(condition: any, product: MLProduct): Promise<boolean> {
+  private async evaluateCompetitorPriceCondition(condition: PricingCondition, product: MLProduct): Promise<boolean> {
     const competitors = this.competitorData.get(product.id) || [];
     
     if (competitors.length === 0) {
@@ -210,74 +212,82 @@ export class PricingAutomationService {
   }
 
   // Avaliar condição de estoque
-  private evaluateStockCondition(condition: any, product: MLProduct): boolean {
+  private evaluateStockCondition(condition: PricingCondition, product: MLProduct): boolean {
     const stockLevel = product.availableQuantity;
+    
+    const conditionValue = typeof condition.value === 'number' ? condition.value : 0;
     
     switch (condition.operator) {
       case 'less_than':
-        return stockLevel < condition.value;
+        return stockLevel < conditionValue;
       case 'greater_than':
-        return stockLevel > condition.value;
+        return stockLevel > conditionValue;
       case 'less_equal':
-        return stockLevel <= condition.value;
+        return stockLevel <= conditionValue;
       case 'greater_equal':
-        return stockLevel >= condition.value;
+        return stockLevel >= conditionValue;
       case 'equals':
-        return stockLevel === condition.value;
+        return stockLevel === conditionValue;
       default:
         return false;
     }
   }
 
   // Avaliar condição de velocidade de vendas (mock)
-  private evaluateSalesVelocityCondition(condition: any, product: MLProduct): boolean {
+  private evaluateSalesVelocityCondition(condition: PricingCondition, product: MLProduct): boolean {
     // Simular velocidade de vendas baseada no estoque vendido
     const salesVelocity = product.soldQuantity / Math.max(1, product.initialQuantity);
     
+    const conditionValue = typeof condition.value === 'number' ? condition.value : 0;
+    
     switch (condition.operator) {
       case 'less_than':
-        return salesVelocity < condition.value;
+        return salesVelocity < conditionValue;
       case 'greater_than':
-        return salesVelocity > condition.value;
+        return salesVelocity > conditionValue;
       default:
         return false;
     }
   }
 
   // Avaliar condição de margem de lucro (mock)
-  private evaluateProfitMarginCondition(condition: any, product: MLProduct): boolean {
+  private evaluateProfitMarginCondition(condition: PricingCondition, product: MLProduct): boolean {
     // Simular margem de lucro (assumindo custo de 70% do preço)
     const estimatedCost = product.price * 0.7;
     const margin = ((product.price - estimatedCost) / product.price) * 100;
     
+    const conditionValue = typeof condition.value === 'number' ? condition.value : 0;
+    
     switch (condition.operator) {
       case 'less_than':
-        return margin < condition.value;
+        return margin < conditionValue;
       case 'greater_than':
-        return margin > condition.value;
+        return margin > conditionValue;
       default:
         return false;
     }
   }
 
   // Avaliar condição baseada em tempo
-  private evaluateTimeBasedCondition(condition: any, product: MLProduct): boolean {
+  private evaluateTimeBasedCondition(condition: PricingCondition, product: MLProduct): boolean {
     const now = new Date();
     const productAge = now.getTime() - new Date(product.dateCreated).getTime();
     const ageInDays = productAge / (1000 * 60 * 60 * 24);
     
+    const conditionValue = typeof condition.value === 'number' ? condition.value : 0;
+    
     switch (condition.operator) {
       case 'greater_than':
-        return ageInDays > condition.value;
+        return ageInDays > conditionValue;
       case 'less_than':
-        return ageInDays < condition.value;
+        return ageInDays < conditionValue;
       default:
         return false;
     }
   }
 
   // Calcular novo preço baseado nas ações
-  private async calculateNewPrice(actions: any[], product: MLProduct): Promise<number> {
+  private async calculateNewPrice(actions: PricingAction[], product: MLProduct): Promise<number> {
     let newPrice = product.price;
     
     for (const action of actions) {
@@ -320,7 +330,7 @@ export class PricingAutomationService {
   }
 
   // Validar mudança de preço
-  private validatePriceChange(product: MLProduct, newPrice: number, limits?: any): ValidationResult {
+  private validatePriceChange(product: MLProduct, newPrice: number, limits?: PricingLimits): ValidationResult {
     const result: ValidationResult = {
       isValid: true,
       errors: [],
@@ -402,7 +412,7 @@ export class PricingAutomationService {
     const lowestCompetitorPrice = Math.min(...competitors.map(c => c.competitorPrice));
     
     let recommendedPrice = product.price;
-    let reasoning: string[] = [];
+    const reasoning: string[] = [];
     let confidence = 50;
     
     // Lógica de recomendação baseada em concorrência

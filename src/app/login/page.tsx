@@ -54,7 +54,7 @@ export default function LoginPage() {
       } else {
         setError('Email ou senha inválidos');
       }
-    } catch (err) {
+    } catch {
       setError('Erro ao fazer login. Tente novamente.');
     } finally {
       setIsLoading(false);

@@ -10,12 +10,20 @@ import Link from 'next/link';
 
 type AuthState = 'loading' | 'success' | 'error';
 
+interface UserInfo {
+  id: string;
+  nickname: string;
+  email?: string;
+  first_name?: string;
+  last_name?: string;
+}
+
 export default function AuthCallbackPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [authState, setAuthState] = useState<AuthState>('loading');
   const [error, setError] = useState<string>('');
-  const [userInfo, setUserInfo] = useState<any>(null);
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
   useEffect(() => {
     const handleCallback = async () => {

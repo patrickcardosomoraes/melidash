@@ -70,14 +70,14 @@ export interface Condition {
   id: string;
   field: string;
   operator: 'equals' | 'greater_than' | 'less_than' | 'contains' | 'between';
-  value: any;
+  value: string | number | boolean;
   logicalOperator?: 'AND' | 'OR';
 }
 
 export interface Action {
   id: string;
   type: 'update_price' | 'update_stock' | 'pause_listing' | 'activate_listing' | 'send_notification';
-  parameters: Record<string, any>;
+  parameters: Record<string, string | number | boolean>;
   delay?: number;
 }
 
@@ -99,7 +99,7 @@ export interface DashboardLayout {
     w: number;
     h: number;
   };
-  config: Record<string, any>;
+  config: Record<string, string | number | boolean>;
   isVisible: boolean;
 }
 
@@ -287,7 +287,7 @@ export interface MLAttribute {
 export interface MLAttributeValue {
   id: string;
   name: string;
-  struct?: any;
+  struct?: Record<string, unknown>;
 }
 
 export interface MLUser {

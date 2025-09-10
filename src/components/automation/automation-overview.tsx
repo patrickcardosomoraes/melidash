@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
-import { Settings, Play, Pause, TrendingUp, TrendingDown, AlertTriangle } from 'lucide-react';
+import { Settings, Play, TrendingUp, TrendingDown, AlertTriangle } from 'lucide-react';
 
 interface AutomationRule {
   id: string;
