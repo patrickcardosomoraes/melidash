@@ -1,0 +1,116 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id               String   @id @default(cuid())
+  email            String   @unique
+  mlUserId         String?  @map("ml_user_id")
+  mlAccessToken    String?  @map("ml_access_token")
+  mlRefreshToken   String?  @map("ml_refresh_token")
+  subscription     Subscription @default(FREE)
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+  
+  // Relations
+  products         Product[]
+  automationRules  AutomationRule[]
+  dashboardLayouts DashboardLayout[]
+  
+  @@map("users")
+}
+
+model Product {
+  id         String        @id @default(cuid())
+  userId     String        @map("user_id")
+  mlId       String        @map("ml_id")
+  title      String
+  price      Float
+  stock      Int
+  status     ProductStatus @default(ACTIVE)
+  categoryId String        @map("category_id")
+  createdAt  DateTime      @default(now()) @map("created_at")
+  updatedAt  DateTime      @updatedAt @map("updated_at")
+  
+  // Relations
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("products")
+}
+
+model AutomationRule {
+  id          String   @id @default(cuid())
+  userId      String   @map("user_id")
+  name        String
+  description String
+  isActive    Boolean  @default(true) @map("is_active")
+  conditions  Json
+  actions     Json
+  priority    Int      @default(0)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("automation_rules")
+}
+
+model DashboardLayout {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  widgetId  String   @map("widget_id")
+  type      String
+  title     String
+  position  Json
+  config    Json
+  isVisible Boolean  @default(true) @map("is_visible")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  
+  // Relations
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("dashboard_layouts")
+}
+
+model Report {
+  id        String     @id @default(cuid())
+  userId    String     @map("user_id")
+  name      String
+  type      ReportType
+  filters   Json
+  data      Json
+  createdAt DateTime   @default(now()) @map("created_at")
+  
+  @@map("reports")
+}
+
+enum Subscription {
+  FREE
+  PRO
+  ENTERPRISE
+}
+
+enum ProductStatus {
+  ACTIVE
+  PAUSED
+  CLOSED
+}
+
+enum ReportType {
+  SALES
+  PRODUCTS
+  PERFORMANCE
+  TRENDS
+  AUTOMATION
+}
