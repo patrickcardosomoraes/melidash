@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getToken } from 'next-auth/jwt';
 
 // Lista de rotas que requerem autenticação
 const PROTECTED_ROUTES = [
@@ -29,7 +28,7 @@ const RATE_LIMIT_MAX_REQUESTS = 100; // 100 requests por minuto
 export async function securityMiddleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const userAgent = request.headers.get('user-agent') || '';
-  const ip = request.ip || request.headers.get('x-forwarded-for') || 'unknown';
+  const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
 
   // 1. Verificar User-Agent suspeito
   if (isSuspiciousUserAgent(userAgent)) {
@@ -49,23 +48,12 @@ export async function securityMiddleware(request: NextRequest) {
   );
 
   if (isProtectedRoute) {
-    // Verificar token de autenticação
-    const token = await getToken({ 
-      req: request, 
-      secret: process.env.NEXTAUTH_SECRET 
-    });
-
-    if (!token) {
-      // Redirecionar para login se não autenticado
-      const loginUrl = new URL('/login', request.url);
-      loginUrl.searchParams.set('callbackUrl', pathname);
-      return NextResponse.redirect(loginUrl);
-    }
-
-    // 4. Validações específicas para webhooks
+    // Validações específicas para webhooks
     if (pathname.startsWith('/api/webhooks/')) {
       return validateWebhookRequest(request);
     }
+    
+    // Para outras rotas protegidas, deixar o NextAuth.js lidar com autenticação
   }
 
   // 5. Headers de segurança

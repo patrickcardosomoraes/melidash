@@ -6,8 +6,6 @@ import {
   ReputationTrend,
   ReviewCategory,
   SellerResponse,
-  ReputationSettings,
-  defaultReputationSettings,
   mockReputationMetrics,
   mockReviews,
   mockReputationAlerts,
@@ -21,7 +19,6 @@ export class ReputationService {
   private alerts: ReputationAlert[] = [];
   private trends: ReputationTrend[] = [];
   private goals: ReputationGoal[] = [];
-  private settings: ReputationSettings = { ...defaultReputationSettings };
 
   constructor() {
     const config = getConfig();
@@ -38,9 +35,7 @@ export class ReputationService {
         communication: 0,
         productQuality: 0,
         customerService: 0,
-        totalReviews: 0,
-        averageRating: 0,
-        responseRate: 0,
+        trend: 'stable' as const,
         lastUpdated: new Date()
       };
     }

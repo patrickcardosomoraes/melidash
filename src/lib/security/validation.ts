@@ -54,21 +54,21 @@ export function sanitizeString(input: string): string {
 }
 
 // Função para sanitizar objetos
-export function sanitizeObject<T extends Record<string, any>>(obj: T): T {
+export function sanitizeObject<T extends Record<string, unknown>>(obj: T): T {
   const sanitized = {} as T;
   
   for (const [key, value] of Object.entries(obj)) {
     if (typeof value === 'string') {
-      sanitized[key as keyof T] = sanitizeString(value) as T[keyof T];
+      (sanitized as Record<string, unknown>)[key] = sanitizeString(value);
     } else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-      sanitized[key as keyof T] = sanitizeObject(value) as T[keyof T];
+      (sanitized as Record<string, unknown>)[key] = sanitizeObject(value as Record<string, unknown>);
     } else if (Array.isArray(value)) {
-      sanitized[key as keyof T] = value.map(item => 
+      (sanitized as Record<string, unknown>)[key] = value.map(item => 
         typeof item === 'string' ? sanitizeString(item) : 
-        typeof item === 'object' && item !== null ? sanitizeObject(item) : item
-      ) as T[keyof T];
+        typeof item === 'object' && item !== null ? sanitizeObject(item as Record<string, unknown>) : item
+      );
     } else {
-      sanitized[key as keyof T] = value;
+      (sanitized as Record<string, unknown>)[key] = value;
     }
   }
   
@@ -167,7 +167,7 @@ export function isValidJWTStructure(token: string): boolean {
 }
 
 // Limitar tamanho de payload
-export function validatePayloadSize(data: any, maxSizeKB: number = 100): boolean {
+export function validatePayloadSize(data: unknown, maxSizeKB: number = 100): boolean {
   try {
     const jsonString = JSON.stringify(data);
     const sizeKB = new Blob([jsonString]).size / 1024;

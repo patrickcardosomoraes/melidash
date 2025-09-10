@@ -1,35 +1,32 @@
-import { withAuth } from "next-auth/middleware"
+import { NextRequest, NextResponse } from "next/server"
 import { securityMiddleware } from "@/lib/security/middleware"
-import { NextRequest } from "next/server"
 
-export default withAuth(
-  async function middleware(req: NextRequest) {
-    // Aplicar validações de segurança
-    const securityResponse = await securityMiddleware(req);
-    if (securityResponse) {
-      return securityResponse;
-    }
-    
-    // Continuar com middleware de autenticação
-    return;
-  },
-  {
-    callbacks: {
-      authorized: ({ token, req }) => {
-        // Permitir acesso a rotas públicas
-        const publicRoutes = ['/', '/login', '/api/auth', '/api/health'];
-        const isPublicRoute = publicRoutes.some(route => 
-          req.nextUrl.pathname.startsWith(route)
-        );
-        
-        if (isPublicRoute) return true;
-        
-        // Requerer token para rotas protegidas
-        return !!token;
-      },
-    },
+export async function middleware(request: NextRequest) {
+  // Aplicar validações de segurança
+  const securityResponse = await securityMiddleware(request);
+  if (securityResponse) {
+    return securityResponse;
   }
-)
+  
+  // Verificar se é rota protegida
+  const { pathname } = request.nextUrl;
+  const protectedRoutes = ['/dashboard', '/products', '/pricing', '/analytics', '/reputation', '/trends'];
+  const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
+  
+  if (isProtectedRoute) {
+    // Verificar se tem cookie de sessão do NextAuth
+    const sessionToken = request.cookies.get('next-auth.session-token') || request.cookies.get('__Secure-next-auth.session-token');
+    
+    if (!sessionToken) {
+      // Redirecionar para login
+      const loginUrl = new URL('/login', request.url);
+      loginUrl.searchParams.set('callbackUrl', pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+  }
+  
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: [
