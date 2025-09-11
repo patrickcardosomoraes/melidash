@@ -131,6 +131,7 @@ const getTrendIcon = (trend: string) => {
 export function ProductsOverview() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter] = useState<'all' | 'active' | 'paused' | 'ended'>('all');
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const { mlApi } = useMercadoLivreAuth();
