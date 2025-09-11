@@ -21,10 +21,10 @@ import { getReputationService } from '@/lib/services/reputation-service';
 import { ReputationGoal, ReputationMetrics } from '@/types/reputation';
 
 interface GoalsPanelProps {
-  // onRefresh?: () => void;
+  onRefresh?: () => void;
 }
 
-export function GoalsPanel({}: GoalsPanelProps) {
+export function GoalsPanel({ onRefresh }: GoalsPanelProps) {
   const [goals, setGoals] = useState<ReputationGoal[]>([]);
   const [metrics, setMetrics] = useState<ReputationMetrics | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);

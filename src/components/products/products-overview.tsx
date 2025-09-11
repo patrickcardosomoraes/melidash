@@ -131,7 +131,14 @@ const getTrendIcon = (trend: string) => {
 export function ProductsOverview() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter] = useState<'all' | 'active' | 'paused' | 'ended'>('all');
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<Array<{
+    id: string;
+    title: string;
+    price: number;
+    stock?: number;
+    status: string;
+    [key: string]: any;
+  }>>([]);
   const [loading, setLoading] = useState(true);
   const { mlApi } = useMercadoLivreAuth();
   const config = getConfig();
@@ -295,12 +302,12 @@ export function ProductsOverview() {
                   <div className="text-right">
                     <div className="flex items-center space-x-1">
                       <span className={`text-sm font-medium ${
-                        product.stock < 5 ? 'text-orange-600' : 
-                        product.stock === 0 ? 'text-red-600' : 'text-green-600'
+                        (product.stock || 0) < 5 ? 'text-orange-600' : 
+                        (product.stock || 0) === 0 ? 'text-red-600' : 'text-green-600'
                       }`}>
-                        {product.stock} un.
+                        {product.stock || 0} un.
                       </span>
-                      {product.stock < 5 && product.stock > 0 && (
+                      {(product.stock || 0) < 5 && (product.stock || 0) > 0 && (
                         <AlertTriangle className="h-4 w-4 text-orange-500" />
                       )}
                     </div>
