@@ -16,6 +16,7 @@ interface AuthActions {
   setToken: (token: MLTokenData) => void;
   login: (user: User) => void;
   loginWithCredentials: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string, name: string) => Promise<void>;
   loginWithML: (code: string) => Promise<void>;
   logout: () => void;
   refreshToken: () => Promise<void>;
@@ -52,15 +53,71 @@ export const useAuthStore = create<AuthStore>()(persist(
       });
     },
 
-    loginWithCredentials: async (email: string, _password: string) => {
+    loginWithCredentials: async (email: string, password: string) => {
       set({ isLoading: true, error: null });
       try {
-        // Em produção, esta função não deve ser usada
-        // Manter apenas para compatibilidade com código existente
-        throw new Error('Login com credenciais não disponível em produção. Use o Mercado Livre.');
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Falha no login');
+        }
+
+        const { user, token } = await response.json();
+        
+        // Salvar token em cookie
+        document.cookie = `auth-token=${token}; path=/; max-age=${7 * 24 * 60 * 60}; secure; samesite=strict`;
+        
+        set({ 
+          user, 
+          token, 
+          isAuthenticated: true, 
+          isLoading: false 
+        });
       } catch (error) {
         set({
           error: error instanceof Error ? error.message : 'Erro no login',
+          isLoading: false,
+        });
+      }
+    },
+
+    register: async (email: string, password: string, name: string) => {
+      set({ isLoading: true, error: null });
+      try {
+        const response = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password, name }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Falha no registro');
+        }
+
+        const { user, token } = await response.json();
+        
+        // Salvar token em cookie
+        document.cookie = `auth-token=${token}; path=/; max-age=${7 * 24 * 60 * 60}; secure; samesite=strict`;
+        
+        set({ 
+          user, 
+          token, 
+          isAuthenticated: true, 
+          isLoading: false 
+        });
+      } catch (error) {
+        set({
+          error: error instanceof Error ? error.message : 'Erro no registro',
           isLoading: false,
         });
       }
@@ -98,6 +155,9 @@ export const useAuthStore = create<AuthStore>()(persist(
     },
 
     logout: () => {
+      // Limpar cookie de autenticação
+      document.cookie = 'auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      
       set({
         user: null,
         token: null,

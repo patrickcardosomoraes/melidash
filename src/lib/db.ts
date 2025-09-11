@@ -27,6 +27,8 @@ export const dbHelpers = {
 
   async createUser(data: {
     email: string;
+    name?: string;
+    password?: string;
     mlUserId?: string;
     mlAccessToken?: string;
     mlRefreshToken?: string;

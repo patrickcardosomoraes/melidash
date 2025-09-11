@@ -14,6 +14,8 @@ datasource db {
 model User {
   id               String   @id @default(cuid())
   email            String   @unique
+  name             String?
+  password         String?
   mlUserId         String?  @map("ml_user_id")
   mlAccessToken    String?  @map("ml_access_token")
   mlRefreshToken   String?  @map("ml_refresh_token")

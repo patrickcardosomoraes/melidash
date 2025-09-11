@@ -1,17 +1,42 @@
 'use client';
 
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ShoppingBag } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ShoppingBag, Eye, EyeOff } from 'lucide-react';
 import { useMercadoLivreAuth } from '@/hooks/use-mercado-livre-auth';
+import { useAuthStore } from '@/lib/stores/auth';
 
 export default function LoginPage() {
   const { login: mlLogin, isLoading: mlLoading } = useMercadoLivreAuth();
-
-
+  const { loginWithCredentials, register, isLoading, error, clearError } = useAuthStore();
+  
+  const [showPassword, setShowPassword] = useState(false);
+  const [loginForm, setLoginForm] = useState({ email: '', password: '' });
+  const [registerForm, setRegisterForm] = useState({ name: '', email: '', password: '', confirmPassword: '' });
 
   const handleMercadoLivreLogin = () => {
     mlLogin();
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    clearError();
+    await loginWithCredentials(loginForm.email, loginForm.password);
+  };
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    clearError();
+    
+    if (registerForm.password !== registerForm.confirmPassword) {
+      return;
+    }
+    
+    await register(registerForm.email, registerForm.password, registerForm.name);
   };
 
   return (
@@ -33,29 +58,153 @@ export default function LoginPage() {
           </p>
         </div>
 
-        {/* Login com Mercado Livre */}
+        {/* Formulários de Login/Registro */}
         <Card>
           <CardHeader>
             <CardTitle>Entrar no MeliDash</CardTitle>
             <CardDescription>
-              Conecte sua conta do Mercado Livre para acessar o dashboard
+              Faça login ou crie uma conta para acessar o dashboard
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="space-y-4">
+          <CardContent>
+            <Tabs defaultValue="login" className="space-y-4">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="login">Login</TabsTrigger>
+                <TabsTrigger value="register">Criar Conta</TabsTrigger>
+              </TabsList>
+              
+              {/* Aba de Login */}
+              <TabsContent value="login" className="space-y-4">
+                <form onSubmit={handleLogin} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="login-email">Email</Label>
+                    <Input
+                      id="login-email"
+                      type="email"
+                      placeholder="seu@email.com"
+                      value={loginForm.email}
+                      onChange={(e) => setLoginForm({ ...loginForm, email: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="login-password">Senha</Label>
+                    <div className="relative">
+                      <Input
+                        id="login-password"
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder="Sua senha"
+                        value={loginForm.password}
+                        onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
+                        required
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </Button>
+                    </div>
+                  </div>
+                  {error && (
+                    <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
+                      {error}
+                    </div>
+                  )}
+                  <Button type="submit" className="w-full" disabled={isLoading}>
+                    {isLoading ? 'Entrando...' : 'Entrar'}
+                  </Button>
+                </form>
+              </TabsContent>
+              
+              {/* Aba de Registro */}
+              <TabsContent value="register" className="space-y-4">
+                <form onSubmit={handleRegister} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="register-name">Nome</Label>
+                    <Input
+                      id="register-name"
+                      type="text"
+                      placeholder="Seu nome completo"
+                      value={registerForm.name}
+                      onChange={(e) => setRegisterForm({ ...registerForm, name: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="register-email">Email</Label>
+                    <Input
+                      id="register-email"
+                      type="email"
+                      placeholder="seu@email.com"
+                      value={registerForm.email}
+                      onChange={(e) => setRegisterForm({ ...registerForm, email: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="register-password">Senha</Label>
+                    <Input
+                      id="register-password"
+                      type="password"
+                      placeholder="Mínimo 6 caracteres"
+                      value={registerForm.password}
+                      onChange={(e) => setRegisterForm({ ...registerForm, password: e.target.value })}
+                      required
+                      minLength={6}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="register-confirm-password">Confirmar Senha</Label>
+                    <Input
+                      id="register-confirm-password"
+                      type="password"
+                      placeholder="Confirme sua senha"
+                      value={registerForm.confirmPassword}
+                      onChange={(e) => setRegisterForm({ ...registerForm, confirmPassword: e.target.value })}
+                      required
+                    />
+                  </div>
+                  {registerForm.password !== registerForm.confirmPassword && registerForm.confirmPassword && (
+                    <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
+                      As senhas não coincidem
+                    </div>
+                  )}
+                  {error && (
+                    <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
+                      {error}
+                    </div>
+                  )}
+                  <Button type="submit" className="w-full" disabled={isLoading || registerForm.password !== registerForm.confirmPassword}>
+                    {isLoading ? 'Criando conta...' : 'Criar Conta'}
+                  </Button>
+                </form>
+              </TabsContent>
+              
+              {/* Divisor */}
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-2 text-muted-foreground">Ou</span>
+                </div>
+              </div>
+              
+              {/* Login com Mercado Livre */}
               <Button 
                 onClick={handleMercadoLivreLogin}
                 disabled={mlLoading}
-                className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-medium"
+                variant="outline"
+                className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-medium border-yellow-400"
                 size="lg"
               >
-                <ShoppingBag className="mr-2 h-4 w-4" />
-                {mlLoading ? 'Conectando...' : 'Conectar com Mercado Livre'}
+                {mlLoading ? 'Conectando...' : 'Entrar com Mercado Livre'}
               </Button>
-              <p className="text-xs text-center text-muted-foreground">
-                Faça login com sua conta do Mercado Livre para gerenciar seus produtos e vendas
-              </p>
-            </div>
+            </Tabs>
           </CardContent>
         </Card>
       </div>
