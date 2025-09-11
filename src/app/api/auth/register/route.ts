@@ -54,17 +54,9 @@ export async function POST(request: NextRequest) {
     }, { status: 201 });
 
   } catch (error) {
-    console.error('Erro no registro:', error);
-    
-    if (error instanceof Error && error.name === 'ZodError') {
-      return NextResponse.json(
-        { message: 'Dados inválidos fornecidos' },
-        { status: 400 }
-      );
-    }
-
+    console.error('Register error:', error);
     return NextResponse.json(
-      { message: 'Erro interno do servidor' },
+      { error: 'Erro interno do servidor' },
       { status: 500 }
     );
   }

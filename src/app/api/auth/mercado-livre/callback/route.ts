@@ -4,8 +4,7 @@ import { MercadoLivreAPI } from '@/lib/api/mercado-livre';
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const code = searchParams.get('code');
-    const state = searchParams.get('state'); // userId pode ser passado via state
+  const code = searchParams.get('code'); // userId pode ser passado via state
     const error = searchParams.get('error');
 
     // Verificar se houve erro na autorização

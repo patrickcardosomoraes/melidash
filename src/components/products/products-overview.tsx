@@ -130,8 +130,7 @@ const getTrendIcon = (trend: string) => {
 
 export function ProductsOverview() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'paused' | 'ended'>('all');
-  const [sortBy, setSortBy] = useState<'title' | 'price' | 'stock' | 'sales'>('title');
+  const [statusFilter] = useState<'all' | 'active' | 'paused' | 'ended'>('all');
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const { mlApi } = useMercadoLivreAuth();
@@ -170,7 +169,7 @@ export function ProductsOverview() {
 
   const totalProducts = products.length;
   const activeProducts = products.filter(p => p.status === 'active').length;
-  const lowStockProducts = products.filter(p => (p.available_quantity || p.stock || 0) < 5).length;
+  const lowStockProducts = products.filter(p => (p.stock || 0) < 5).length;
   const totalViews = products.reduce((sum, p) => sum + (p.views || 0), 0);
 
   if (loading) {

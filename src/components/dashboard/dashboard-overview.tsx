@@ -15,7 +15,7 @@ import {
   Eye,
   BarChart3,
 } from 'lucide-react';
-import { useDashboardStore } from '@/lib/stores/dashboard';
+// import { useDashboardStore } from '@/lib/stores/dashboard';
 import { cn } from '@/lib/utils';
 
 interface MetricCardProps {

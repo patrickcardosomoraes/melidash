@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -12,7 +12,6 @@ import {
   Plus,
   Edit,
   Trash2,
-  Calendar as CalendarIcon,
   TrendingUp,
   CheckCircle,
   AlertCircle,
@@ -22,10 +21,10 @@ import { getReputationService } from '@/lib/services/reputation-service';
 import { ReputationGoal, ReputationMetrics } from '@/types/reputation';
 
 interface GoalsPanelProps {
-  onRefresh: () => void;
+  // onRefresh?: () => void;
 }
 
-export function GoalsPanel({ onRefresh }: GoalsPanelProps) {
+export function GoalsPanel({}: GoalsPanelProps) {
   const [goals, setGoals] = useState<ReputationGoal[]>([]);
   const [metrics, setMetrics] = useState<ReputationMetrics | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -40,7 +39,7 @@ export function GoalsPanel({ onRefresh }: GoalsPanelProps) {
 
   const reputationService = getReputationService();
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
       const [goalsData, metricsData] = await Promise.all([
@@ -54,11 +53,11 @@ export function GoalsPanel({ onRefresh }: GoalsPanelProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [loadData]);
 
   const handleCreateGoal = async () => {
     if (!metrics) return;
@@ -317,7 +316,7 @@ export function GoalsPanel({ onRefresh }: GoalsPanelProps) {
         ) : (
           goals.map((goal) => {
             const progress = Math.min((goal.current / goal.target) * 100, 100);
-            const { status, color, icon: StatusIcon } = getGoalStatus(goal);
+            const { color, icon: StatusIcon } = getGoalStatus(goal);
             const daysLeft = Math.ceil((goal.deadline.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
             
             return (

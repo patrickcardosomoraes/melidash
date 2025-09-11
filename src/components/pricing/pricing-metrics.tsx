@@ -4,7 +4,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { 
   BarChart3, 
   TrendingUp, 
-  TrendingDown, 
   Target,
   Clock,
   CheckCircle,
@@ -21,7 +20,6 @@ export function PricingMetrics({ executions, rules }: PricingMetricsProps) {
   // Calcular métricas
   const totalExecutions = executions.length;
   const successfulExecutions = executions.filter(e => e.status === 'success').length;
-  const failedExecutions = executions.filter(e => e.status === 'failed').length;
   const successRate = totalExecutions > 0 ? (successfulExecutions / totalExecutions) * 100 : 0;
   
   const priceChanges = executions.filter(e => e.status === 'success' && e.oldPrice !== e.newPrice);

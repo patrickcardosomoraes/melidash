@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -31,7 +31,7 @@ export function ChatPanel({ onRefresh: _ }: ChatPanelProps) {
 
   const aiService = getAIAssistantService();
 
-  const loadChats = async () => {
+  const loadChats = useCallback(async () => {
     try {
       setLoading(true);
       const chatsData = await aiService.getChats();
@@ -44,11 +44,11 @@ export function ChatPanel({ onRefresh: _ }: ChatPanelProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [aiService]);
 
   useEffect(() => {
     loadChats();
-  }, [loadChats]);
+  }, []);
 
   useEffect(() => {
     scrollToBottom();

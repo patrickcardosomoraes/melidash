@@ -7,12 +7,10 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { 
-  Play, 
   Pause, 
   Plus, 
   Settings, 
   TrendingUp, 
-  TrendingDown, 
   AlertTriangle,
   CheckCircle,
   Clock,
@@ -22,10 +20,10 @@ import {
 } from 'lucide-react';
 import { mockPricingRules, PricingRule, PricingExecution, PricingAlert } from '@/types/pricing';
 import { getConfig } from '@/lib/config/production';
-import { PricingRuleCard } from './pricing-rule-card';
-import { PricingMetrics } from './pricing-metrics';
-import { PricingHistory } from './pricing-history';
-import { CreateRuleDialog } from './create-rule-dialog';
+// import { PricingRuleCard } from './pricing-rule-card';
+// import { PricingMetrics } from './pricing-metrics';
+// import { PricingHistory } from './pricing-history';
+// import { CreateRuleDialog } from './create-rule-dialog';
 
 export function PricingOverview() {
   const [rules, setRules] = useState<PricingRule[]>([]);
@@ -338,34 +336,29 @@ export function PricingOverview() {
         <TabsContent value="rules" className="space-y-4">
           <div className="grid gap-4">
             {rules.map(rule => (
-              <PricingRuleCard
-                key={rule.id}
-                rule={rule}
-                onToggle={() => toggleRule(rule.id)}
-                onDelete={() => deleteRule(rule.id)}
-              />
+              <Card key={rule.id}>
+                <CardHeader>
+                  <CardTitle>{rule.name}</CardTitle>
+                  <CardDescription>{rule.description}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p>Status: {rule.isActive ? 'Ativo' : 'Inativo'}</p>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </TabsContent>
 
         <TabsContent value="history">
-          <PricingHistory executions={executions} />
+          {/* <PricingHistory executions={executions} /> */}
         </TabsContent>
 
         <TabsContent value="analytics">
-          <PricingMetrics executions={executions} rules={rules} />
+          {/* <PricingMetrics executions={executions} rules={rules} /> */}
         </TabsContent>
       </Tabs>
 
-      {/* Dialog para criar nova regra */}
-      <CreateRuleDialog
-        open={isCreateDialogOpen}
-        onOpenChange={setIsCreateDialogOpen}
-        onRuleCreated={(newRule) => {
-          setRules(prev => [...prev, newRule]);
-          setIsCreateDialogOpen(false);
-        }}
-      />
+      {/* Dialog para criar nova regra - Temporariamente removido */}
     </div>
   );
 }

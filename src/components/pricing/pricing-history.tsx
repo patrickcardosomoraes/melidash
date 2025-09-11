@@ -10,7 +10,6 @@ import {
   AlertTriangle, 
   Clock, 
   Search,
-  Filter,
   Download,
   TrendingUp,
   TrendingDown

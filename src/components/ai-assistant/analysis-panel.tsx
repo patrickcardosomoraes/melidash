@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -34,7 +34,7 @@ export function AnalysisPanel({ onRefresh: _ }: AnalysisPanelProps) {
 
   const aiService = getAIAssistantService();
 
-  const loadAnalyses = async () => {
+  const loadAnalyses = useCallback(async () => {
     try {
       setLoading(true);
       const analysesData = await aiService.getAnalyses();
@@ -44,11 +44,11 @@ export function AnalysisPanel({ onRefresh: _ }: AnalysisPanelProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [aiService]);
 
   useEffect(() => {
     loadAnalyses();
-  }, [loadAnalyses]);
+  }, []);
 
   const filteredAnalyses = analyses.filter(analysis => {
     if (filter === 'all') return true;
