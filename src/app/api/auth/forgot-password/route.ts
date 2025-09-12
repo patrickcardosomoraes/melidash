@@ -50,13 +50,18 @@ export async function POST(request: NextRequest) {
     
     // TODO: Enviar email com o link de reset
     // Por enquanto, vamos apenas logar o token para desenvolvimento
-    console.log('📧 Reset link (DEV):', `http://localhost:3000/reset-password?token=${resetToken}`);
+    const baseUrl = process.env.NODE_ENV === 'development' 
+      ? 'http://localhost:3000'
+      : process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'https://melidash.vercel.app';
+    
+    const resetLink = `${baseUrl}/reset-password?token=${resetToken}`;
+    console.log('📧 Reset link (DEV):', resetLink);
     
     return NextResponse.json({
       message: 'Se o email existir em nossa base, você receberá as instruções para redefinir sua senha.',
       // Em desenvolvimento, incluímos o link
       ...(process.env.NODE_ENV === 'development' && {
-        resetLink: `http://localhost:3000/reset-password?token=${resetToken}`,
+        resetLink,
       }),
     });
     

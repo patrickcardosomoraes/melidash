@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useMercadoLivreAuth } from '@/hooks/use-mercado-livre-auth';
 import { getConfig } from '@/lib/config/production';
+import { ProductImage } from './product-image';
 import { 
   Package, 
   Search, 
@@ -274,9 +275,13 @@ export function ProductsOverview() {
             {filteredProducts.map((product) => (
               <div key={product.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors">
                 <div className="flex items-center space-x-4">
-                  <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center">
-                    <Package className="h-8 w-8 text-muted-foreground" />
-                  </div>
+                  <ProductImage
+                    thumbnailId={product.thumbnailId || product.thumbnail_id}
+                    thumbnail={product.thumbnail}
+                    secureThumbnail={product.secureThumbnail || product.secure_thumbnail}
+                    title={product.title}
+                    size="md"
+                  />
                   <div className="flex-1 min-w-0">
                     <h3 className="font-medium truncate">{product.title}</h3>
                     <p className="text-sm text-muted-foreground">{product.category}</p>

@@ -272,5 +272,6 @@ export function getMLProductUrl(permalink: string): string {
 }
 
 export function getMLImageUrl(pictureId: string, size: 'I' | 'O' | 'V' | 'U' | 'P' | 'S' | 'B' | 'T' | 'D' | 'N' = 'O'): string {
+  // Sempre usar HTTPS para imagens do Mercado Livre
   return `https://http2.mlstatic.com/D_${pictureId}-${size}.jpg`;
 }

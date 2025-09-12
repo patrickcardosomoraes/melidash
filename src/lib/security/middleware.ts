@@ -149,7 +149,7 @@ function addSecurityHeaders(response: NextResponse): void {
   // Content Security Policy
   response.headers.set(
     'Content-Security-Policy',
-    "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:;"
+    "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js-agent.newrelic.com https://*.nr-data.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: https://*.mlstatic.com https://*.mercadolibre.com https://*.mercadolivre.com.br; font-src 'self' data:; connect-src 'self' https://api.mercadolibre.com https://api.mercadolivre.com.br https://auth.mercadolivre.com.br https://js-agent.newrelic.com https://*.nr-data.net https://bam.nr-data.net;"
   );
   
   // HSTS (apenas em HTTPS)
