@@ -34,10 +34,10 @@ export function TrendCard({ trend }: TrendCardProps) {
 
   const getSeasonalityColor = (pattern: string): string => {
     switch (pattern) {
-      case 'growing': return 'bg-green-100 text-green-800';
-      case 'declining': return 'bg-red-100 text-red-800';
-      case 'seasonal': return 'bg-blue-100 text-blue-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'growing': return 'bg-green-600 text-white hover:bg-green-700';
+      case 'declining': return 'bg-red-600 text-white hover:bg-red-700';
+      case 'seasonal': return 'bg-blue-600 text-white hover:bg-blue-700';
+      default: return 'bg-gray-500 text-white hover:bg-gray-600';
     }
   };
 

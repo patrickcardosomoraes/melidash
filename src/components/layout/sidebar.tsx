@@ -121,15 +121,15 @@ export function Sidebar({ collapsed, onCollapse }: SidebarProps) {
 
   return (
     <div className={cn(
-      "fixed left-0 top-0 z-40 h-screen bg-card border-r transition-all duration-300",
+      "fixed left-0 top-0 z-40 h-screen glass-effect border-r transition-all duration-300 modern-shadow",
       collapsed ? "w-16" : "w-64"
     )}>
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b">
         {!collapsed && (
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-sm">MD</span>
+            <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center modern-shadow">
+              <span className="text-white font-bold text-sm">MD</span>
             </div>
             <span className="font-semibold text-lg">MeliDash</span>
           </div>
@@ -161,8 +161,8 @@ export function Sidebar({ collapsed, onCollapse }: SidebarProps) {
                 className={cn(
                   "flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors relative group",
                   isActive
-                    ? "bg-primary text-primary-foreground"
-                    : "hover:bg-accent hover:text-accent-foreground",
+                    ? "gradient-primary text-white modern-shadow"
+                    : "hover:bg-accent/50 hover:text-accent-foreground hover:modern-shadow transition-all duration-200",
                   collapsed && "justify-center"
                 )}
                 onMouseEnter={() => setHoveredItem(item.key)}

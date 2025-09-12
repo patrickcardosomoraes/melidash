@@ -30,7 +30,7 @@ export function Header({ onMenuClick }: HeaderProps) {
   };
 
   return (
-    <header className="h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="h-16 border-b glass-effect modern-shadow">
       <div className="flex items-center justify-between px-6 h-full">
         {/* Left Section */}
         <div className="flex items-center space-x-4">

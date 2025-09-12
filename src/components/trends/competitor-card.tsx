@@ -24,11 +24,11 @@ interface CompetitorCardProps {
 export function CompetitorCard({ competitor }: CompetitorCardProps) {
   const getThreatColor = (threat: string): string => {
     switch (threat) {
-      case 'critical': return 'bg-red-100 text-red-800 border-red-200';
-      case 'high': return 'bg-orange-100 text-orange-800 border-orange-200';
-      case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'low': return 'bg-green-100 text-green-800 border-green-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+      case 'critical': return 'bg-red-600 text-white border-red-600 hover:bg-red-700';
+      case 'high': return 'bg-orange-600 text-white border-orange-600 hover:bg-orange-700';
+      case 'medium': return 'bg-yellow-600 text-white border-yellow-600 hover:bg-yellow-700';
+      case 'low': return 'bg-green-600 text-white border-green-600 hover:bg-green-700';
+      default: return 'bg-gray-500 text-white border-gray-500 hover:bg-gray-600';
     }
   };
 

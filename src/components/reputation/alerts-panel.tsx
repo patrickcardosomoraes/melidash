@@ -43,15 +43,15 @@ export function AlertsPanel({ alerts, onMarkAsRead, onDismiss }: AlertsPanelProp
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case 'critical':
-        return 'bg-red-100 text-red-800 border-red-200';
+        return 'bg-red-600 text-white border-red-600 hover:bg-red-700';
       case 'high':
-        return 'bg-orange-100 text-orange-800 border-orange-200';
+        return 'bg-orange-600 text-white border-orange-600 hover:bg-orange-700';
       case 'medium':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+        return 'bg-yellow-500 text-white border-yellow-500 hover:bg-yellow-600';
       case 'low':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
+        return 'bg-blue-600 text-white border-blue-600 hover:bg-blue-700';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return 'bg-gray-500 text-white border-gray-500 hover:bg-gray-600';
     }
   };
 

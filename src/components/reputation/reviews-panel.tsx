@@ -79,11 +79,11 @@ export function ReviewsPanel({ reviews, onRefresh, onRespond }: ReviewsPanelProp
   const getSentimentColor = (sentiment: string) => {
     switch (sentiment) {
       case 'positive':
-        return 'bg-green-100 text-green-800 border-green-200';
+        return 'bg-green-600 text-white border-green-600 hover:bg-green-700';
       case 'negative':
-        return 'bg-red-100 text-red-800 border-red-200';
+        return 'bg-red-600 text-white border-red-600 hover:bg-red-700';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return 'bg-gray-500 text-white border-gray-500 hover:bg-gray-600';
     }
   };
 

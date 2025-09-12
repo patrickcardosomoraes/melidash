@@ -82,9 +82,9 @@ export function AnalysisPanel({ onRefresh: _ }: AnalysisPanelProps) {
   };
 
   const getScoreBadgeColor = (score: number) => {
-    if (score >= 80) return 'bg-green-100 text-green-800';
-    if (score >= 60) return 'bg-yellow-100 text-yellow-800';
-    return 'bg-red-100 text-red-800';
+    if (score >= 80) return 'bg-green-600 text-white hover:bg-green-700';
+    if (score >= 60) return 'bg-yellow-600 text-white hover:bg-yellow-700';
+    return 'bg-red-600 text-white hover:bg-red-700';
   };
 
   const handleCreateAnalysis = async (type: AIAnalysis['type']) => {

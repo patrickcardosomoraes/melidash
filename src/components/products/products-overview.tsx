@@ -110,13 +110,13 @@ const mockProducts = [
 const getStatusBadge = (status: string) => {
   switch (status) {
     case 'active':
-      return <Badge variant="default" className="bg-green-100 text-green-800">Ativo</Badge>;
+      return <Badge variant="default" className="bg-green-600 text-white hover:bg-green-700">Ativo</Badge>;
     case 'paused':
-      return <Badge variant="secondary">Pausado</Badge>;
+      return <Badge variant="secondary" className="bg-yellow-500 text-white hover:bg-yellow-600">Pausado</Badge>;
     case 'closed':
-      return <Badge variant="destructive">Fechado</Badge>;
+      return <Badge variant="destructive" className="bg-red-600 text-white hover:bg-red-700">Fechado</Badge>;
     default:
-      return <Badge variant="outline">Desconhecido</Badge>;
+      return <Badge variant="outline" className="border-gray-400 text-gray-600">Desconhecido</Badge>;
   }
 };
 

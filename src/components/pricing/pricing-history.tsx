@@ -59,13 +59,13 @@ export function PricingHistory({ executions }: PricingHistoryProps) {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'success':
-        return <Badge variant="default" className="bg-green-100 text-green-800">Sucesso</Badge>;
+        return <Badge variant="default" className="bg-green-600 text-white hover:bg-green-700">Sucesso</Badge>;
       case 'failed':
-        return <Badge variant="destructive">Falha</Badge>;
+        return <Badge variant="destructive" className="bg-red-600 text-white hover:bg-red-700">Falha</Badge>;
       case 'ignored':
-        return <Badge variant="secondary">Ignorado</Badge>;
+        return <Badge variant="secondary" className="bg-gray-500 text-white hover:bg-gray-600">Ignorado</Badge>;
       default:
-        return <Badge variant="secondary">Desconhecido</Badge>;
+        return <Badge variant="secondary" className="bg-gray-500 text-white hover:bg-gray-600">Desconhecido</Badge>;
     }
   };
 

@@ -140,13 +140,13 @@ export function ReportsOverview() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'ready':
-        return <Badge className="bg-green-100 text-green-800">Pronto</Badge>;
+        return <Badge className="bg-green-600 text-white hover:bg-green-700">Pronto</Badge>;
       case 'generating':
-        return <Badge className="bg-yellow-100 text-yellow-800">Gerando</Badge>;
+        return <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">Gerando</Badge>;
       case 'scheduled':
-        return <Badge className="bg-blue-100 text-blue-800">Agendado</Badge>;
+        return <Badge className="bg-blue-600 text-white hover:bg-blue-700">Agendado</Badge>;
       default:
-        return <Badge variant="secondary">Desconhecido</Badge>;
+        return <Badge variant="secondary" className="bg-gray-500 text-white hover:bg-gray-600">Desconhecido</Badge>;
     }
   };
 
@@ -163,9 +163,9 @@ export function ReportsOverview() {
 
   const getFormatBadge = (format: string) => {
     const colors = {
-      pdf: 'bg-red-100 text-red-800',
-      excel: 'bg-green-100 text-green-800',
-      csv: 'bg-blue-100 text-blue-800'
+      pdf: 'bg-red-600 text-white hover:bg-red-700',
+      excel: 'bg-green-600 text-white hover:bg-green-700',
+      csv: 'bg-blue-600 text-white hover:bg-blue-700'
     };
     return (
       <Badge className={colors[format as keyof typeof colors]}>

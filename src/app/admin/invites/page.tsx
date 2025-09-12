@@ -180,10 +180,10 @@ export default function AdminInvitesPage() {
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      PENDING: { color: 'bg-yellow-100 text-yellow-800', icon: Clock },
-      ACCEPTED: { color: 'bg-green-100 text-green-800', icon: CheckCircle },
-      EXPIRED: { color: 'bg-gray-100 text-gray-800', icon: XCircle },
-      REVOKED: { color: 'bg-red-100 text-red-800', icon: UserX },
+      PENDING: { color: 'bg-yellow-500 text-white hover:bg-yellow-600', icon: Clock },
+      ACCEPTED: { color: 'bg-green-600 text-white hover:bg-green-700', icon: CheckCircle },
+      EXPIRED: { color: 'bg-gray-500 text-white hover:bg-gray-600', icon: XCircle },
+      REVOKED: { color: 'bg-red-600 text-white hover:bg-red-700', icon: UserX },
     };
     
     const config = statusConfig[status as keyof typeof statusConfig];

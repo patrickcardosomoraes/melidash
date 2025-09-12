@@ -119,10 +119,10 @@ export function AlertsOverview() {
 
   const getCategoryBadge = (category: string) => {
     const colors = {
-      system: 'bg-gray-100 text-gray-800',
-      sales: 'bg-green-100 text-green-800',
-      inventory: 'bg-blue-100 text-blue-800',
-      automation: 'bg-purple-100 text-purple-800'
+      system: 'bg-gray-500 text-white hover:bg-gray-600',
+      sales: 'bg-green-600 text-white hover:bg-green-700',
+      inventory: 'bg-blue-600 text-white hover:bg-blue-700',
+      automation: 'bg-purple-600 text-white hover:bg-purple-700'
     };
     
     const labels = {

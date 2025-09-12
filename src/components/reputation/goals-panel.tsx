@@ -137,13 +137,13 @@ export function GoalsPanel({ onRefresh }: GoalsPanelProps) {
     
     switch (status) {
       case 'completed':
-        return <Badge className="bg-green-100 text-green-800">Concluída</Badge>;
+        return <Badge className="bg-green-600 text-white hover:bg-green-700">Concluída</Badge>;
       case 'overdue':
-        return <Badge className="bg-red-100 text-red-800">Atrasada</Badge>;
+        return <Badge className="bg-red-600 text-white hover:bg-red-700">Atrasada</Badge>;
       case 'urgent':
-        return <Badge className="bg-orange-100 text-orange-800">Urgente</Badge>;
+        return <Badge className="bg-orange-600 text-white hover:bg-orange-700">Urgente</Badge>;
       default:
-        return <Badge className="bg-blue-100 text-blue-800">Ativa</Badge>;
+        return <Badge className="bg-blue-600 text-white hover:bg-blue-700">Ativa</Badge>;
     }
   };
 

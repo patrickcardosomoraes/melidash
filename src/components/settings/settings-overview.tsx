@@ -102,7 +102,7 @@ export function SettingsOverview() {
                 <div className="flex items-center space-x-2">
                   {isAuthenticated ? (
                     <>
-                      <Badge variant="default" className="bg-green-100 text-green-800">
+                      <Badge variant="default" className="bg-green-600 text-white hover:bg-green-700">
                         <CheckCircle className="h-3 w-3 mr-1" />
                         Conectado
                       </Badge>
@@ -325,7 +325,7 @@ export function SettingsOverview() {
                       </p>
                     </div>
                   </div>
-                  <Badge variant="default" className="bg-green-100 text-green-800">
+                  <Badge variant="default" className="bg-green-600 text-white hover:bg-green-700">
                     <CheckCircle className="h-3 w-3 mr-1" />
                     Seguro
                   </Badge>
@@ -341,7 +341,7 @@ export function SettingsOverview() {
                       </p>
                     </div>
                   </div>
-                  <Badge variant="default" className="bg-green-100 text-green-800">
+                  <Badge variant="default" className="bg-green-600 text-white hover:bg-green-700">
                     <CheckCircle className="h-3 w-3 mr-1" />
                     Ativo
                   </Badge>
@@ -357,7 +357,7 @@ export function SettingsOverview() {
                       </p>
                     </div>
                   </div>
-                  <Badge variant="default" className="bg-green-100 text-green-800">
+                  <Badge variant="default" className="bg-green-600 text-white hover:bg-green-700">
                     <CheckCircle className="h-3 w-3 mr-1" />
                     Ativo
                   </Badge>
