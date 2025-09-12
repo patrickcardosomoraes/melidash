@@ -11,13 +11,13 @@ const updateUserSchema = z.object({
 // PUT /api/admin/users/[id] - Update user
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // TODO: Implement proper authentication check for admin role
-    const adminUserId = 'admin-user-id'; // This should come from auth
     
-    const userId = params.id;
+    const resolvedParams = await params;
+    const userId = resolvedParams.id;
     const body = await request.json();
     
     // Validate input
@@ -93,13 +93,13 @@ export async function PUT(
 // DELETE /api/admin/users/[id] - Delete user
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // TODO: Implement proper authentication check for admin role
-    const adminUserId = 'admin-user-id'; // This should come from auth
     
-    const userId = params.id;
+    const resolvedParams = await params;
+    const userId = resolvedParams.id;
     
     // Create Supabase client
     const supabase = createClient(

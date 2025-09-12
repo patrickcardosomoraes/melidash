@@ -11,8 +11,8 @@ import {
   DialogContent, 
   DialogDescription, 
   DialogHeader, 
-  DialogTitle, 
-  DialogTrigger 
+  DialogTitle,
+  DialogTrigger
 } from '@/components/ui/dialog';
 import { 
   Table, 

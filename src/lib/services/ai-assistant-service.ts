@@ -73,10 +73,12 @@ export class AIAssistantService {
     await this.updateInsightStatus(id, 'dismissed');
   }
 
-  async applyRecommendation(insightId: string, _recommendationId: string): Promise<void> {
+  async applyRecommendation(insightId: string, recommendationId: string): Promise<void> {
     await this.simulateDelay();
     await this.updateInsightStatus(insightId, 'applied');
     // Here you would implement the actual recommendation application logic
+    // TODO: Use recommendationId to apply specific recommendation
+    console.log(`Applying recommendation ${recommendationId} for insight ${insightId}`);
   }
 
   // Chat Management
@@ -137,7 +139,8 @@ export class AIAssistantService {
     return assistantMessage;
   }
 
-  private async generateAIResponse(userMessage: string, _context: AIChat['context']): Promise<string> {
+  private async generateAIResponse(userMessage: string, context: AIChat['context']): Promise<string> {
+    // TODO: Use context to provide more personalized responses
     // Simulate AI processing time
     await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
     

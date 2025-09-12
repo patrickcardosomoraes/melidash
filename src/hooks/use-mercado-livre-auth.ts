@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { getMercadoLivreAPI } from '@/lib/api/mercado-livre';
-import { MLUser, MLTokenData } from '@/types/api';
+import { MLUser } from '@/types/api';
 
 interface AuthState {
   isAuthenticated: boolean;

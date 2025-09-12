@@ -12,14 +12,6 @@ const PROTECTED_ROUTES = [
   '/api/webhooks/mercado-livre'
 ];
 
-// Lista de rotas públicas
-const PUBLIC_ROUTES = [
-  '/',
-  '/login',
-  '/api/auth',
-  '/api/health'
-];
-
 // Rate limiting simples (em produção, use Redis ou similar)
 const rateLimitMap = new Map<string, { count: number; lastReset: number }>();
 const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minuto

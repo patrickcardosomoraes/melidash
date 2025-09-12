@@ -19,7 +19,6 @@ export async function GET(request: NextRequest) {
   try {
     // TODO: Implement proper authentication check for admin role
     // For now, we'll simulate admin check
-    const adminUserId = 'admin-user-id'; // This should come from auth
     
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status');
@@ -113,7 +112,6 @@ export async function POST(request: NextRequest) {
     const validatedData = createInviteSchema.parse(body);
     
     // TODO: Implement proper authentication check for admin role
-    const adminUserId = 'admin-user-id'; // This should come from auth
     
     // Generate unique token
     const token = crypto.randomBytes(32).toString('hex');
@@ -199,7 +197,6 @@ export async function PUT(request: NextRequest) {
     const validatedData = updateInviteSchema.parse(body);
     
     // TODO: Implement proper authentication check for admin role
-    const adminUserId = 'admin-user-id';
     
     // TODO: Update invitation in database
     // const result = await supabaseDbHelpers.query(

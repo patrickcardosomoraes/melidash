@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseDbHelpers } from '@/lib/supabase-db';
 import { z } from 'zod';
 import bcrypt from 'bcryptjs';
 
@@ -54,11 +53,9 @@ export async function POST(request: NextRequest) {
     
     console.log('✅ Valid reset token found');
     
-    // Hash da nova senha
-    console.log('🔒 Hashing new password...');
-    const saltRounds = 12;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-    console.log('✅ Password hashed successfully');
+    // TODO: Hash da nova senha e atualizar no banco
+    // const saltRounds = 12;
+    // const hashedPassword = await bcrypt.hash(password, saltRounds);
     
     // TODO: Atualizar senha no banco e limpar token de reset
     // Por enquanto, vamos simular
