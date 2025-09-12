@@ -7,18 +7,60 @@ const globalForPrisma = globalThis as unknown as {
 export const db =
   globalForPrisma.prisma ??
   new PrismaClient({
-    log: ['query'],
+    log: process.env.NODE_ENV === 'development' ? ['error'] : ['error'],
+    datasources: {
+      db: {
+        url: process.env.DATABASE_URL,
+      },
+    },
   });
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db;
+
+// Função para criar nova instância quando necessário
+export function createFreshPrismaClient() {
+  return new PrismaClient({
+    log: ['error'],
+    datasources: {
+      db: {
+        url: process.env.DATABASE_URL,
+      },
+    },
+  });
+}
 
 // Helper functions para operações comuns
 export const dbHelpers = {
   // Usuários
   async getUserByEmail(email: string) {
-    return await db.user.findUnique({
-      where: { email },
-    });
+    try {
+      // Usando raw query para evitar prepared statement conflicts
+      const users = await db.$queryRaw`
+        SELECT id, email, name, password, ml_user_id, ml_access_token, ml_refresh_token, created_at, updated_at
+        FROM users 
+        WHERE email = ${email}
+        LIMIT 1
+      `;
+      
+      if (Array.isArray(users) && users.length > 0) {
+        const user = users[0] as any;
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          password: user.password,
+          mlUserId: user.ml_user_id,
+          mlAccessToken: user.ml_access_token,
+          mlRefreshToken: user.ml_refresh_token,
+          createdAt: user.created_at,
+          updatedAt: user.updated_at,
+        };
+      }
+      return null;
+    } catch (error: any) {
+      console.error('Error finding user by email:', error);
+      throw error;
+    }
   },
 
   async createUser(data: {
@@ -29,9 +71,34 @@ export const dbHelpers = {
     mlAccessToken?: string;
     mlRefreshToken?: string;
   }) {
-    return await db.user.create({
-      data,
-    });
+    try {
+      // Gerar ID usando crypto nativo
+      const crypto = require('crypto');
+      const id = crypto.randomUUID();
+      const now = new Date();
+      
+      // Usando raw query para evitar prepared statement conflicts
+      await db.$executeRaw`
+        INSERT INTO users (id, email, name, password, ml_user_id, ml_access_token, ml_refresh_token, created_at, updated_at)
+        VALUES (${id}, ${data.email}, ${data.name || null}, ${data.password || null}, ${data.mlUserId || null}, ${data.mlAccessToken || null}, ${data.mlRefreshToken || null}, ${now}, ${now})
+      `;
+      
+      // Retornar o usuário criado
+      return {
+        id,
+        email: data.email,
+        name: data.name || null,
+        password: data.password || null,
+        mlUserId: data.mlUserId || null,
+        mlAccessToken: data.mlAccessToken || null,
+        mlRefreshToken: data.mlRefreshToken || null,
+        createdAt: now,
+        updatedAt: now,
+      };
+    } catch (error: any) {
+      console.error('Error creating user:', error);
+      throw error;
+    }
   },
 
   async updateUserTokens(userId: string, tokens: {
