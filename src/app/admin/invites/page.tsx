@@ -32,7 +32,6 @@ import {
 import { 
   Plus, 
   Mail, 
-  Calendar, 
   User, 
   Copy, 
   CheckCircle, 
@@ -350,7 +349,7 @@ export default function AdminInvitesPage() {
               <Mail className="mx-auto h-12 w-12 text-gray-400 mb-4" />
               <p className="text-gray-600">Nenhum convite encontrado</p>
               <p className="text-sm text-gray-500 mt-2">
-                Clique em "Novo Convite" para começar
+                Clique em &quot;Novo Convite&quot; para começar
               </p>
             </div>
           ) : (

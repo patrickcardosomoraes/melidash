@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
-import { supabaseDbHelpers } from '@/lib/supabase-db';
 import crypto from 'crypto';
 
 // Validation schemas
@@ -27,57 +27,72 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '10');
     const offset = (page - 1) * limit;
 
-    // Build query
-    let query = `
-      SELECT 
-        i.id,
-        i.email,
-        i.status,
-        i.expires_at,
-        i.created_at,
-        i.accepted_at,
-        u.name as invited_by_name,
-        u.email as invited_by_email
-      FROM invitations i
-      LEFT JOIN users u ON i.invited_by = u.id
-    `;
-    
-    const params: any[] = [];
+    // Create Supabase client
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+
+    // Build query with Supabase client
+    let supabaseQuery = supabase
+      .from('invitations')
+      .select(`
+        id,
+        email,
+        status,
+        expires_at,
+        created_at,
+        accepted_at,
+        invited_by
+      `, { count: 'exact' })
+      .order('created_at', { ascending: false })
+      .range(offset, offset + limit - 1);
     
     if (status) {
-      query += ` WHERE i.status = $${params.length + 1}`;
-      params.push(status);
+      supabaseQuery = supabaseQuery.eq('status', status);
+    }
+
+    const { data: result, error, count } = await supabaseQuery;
+    
+    if (error) {
+      console.error('Supabase error:', error);
+      throw new Error('Erro ao buscar convites');
     }
     
-    query += ` ORDER BY i.created_at DESC LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
-    params.push(limit, offset);
-
-    // TODO: Replace with actual database query
-    // const result = await supabaseDbHelpers.query(query, params);
+    // Get inviter names for invites that have invited_by
+    const invites = result || [];
+    const inviterIds = invites.filter(inv => inv.invited_by).map(inv => inv.invited_by);
     
-    // Mock response for now
-    const mockInvites = [
-      {
-        id: '123e4567-e89b-12d3-a456-426614174000',
-        email: 'user@example.com',
-        status: 'PENDING',
-        expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-        created_at: new Date().toISOString(),
-        accepted_at: null,
-        invited_by_name: 'Admin User',
-        invited_by_email: 'admin@melidash.com'
-      }
-    ];
+    let inviters: { id: string; name: string; email: string }[] = [];
+    if (inviterIds.length > 0) {
+      const { data: inviterData } = await supabase
+        .from('users')
+        .select('id, name, email')
+        .in('id', inviterIds);
+      inviters = inviterData || [];
+    }
+    
+    // Transform data to match expected format
+    const invitesWithInviters = invites.map(invite => {
+      const inviter = inviters.find(inv => inv.id === invite.invited_by);
+      return {
+        ...invite,
+        invited_by_name: inviter?.name || null,
+        invited_by_email: inviter?.email || null
+      };
+    });
+    
+    const total = count || 0;
 
     return NextResponse.json({
       success: true,
       data: {
-        invites: mockInvites,
+        invites: invitesWithInviters,
         pagination: {
           page,
           limit,
-          total: 1,
-          totalPages: 1
+          total,
+          totalPages: Math.ceil(total / limit)
         }
       }
     });

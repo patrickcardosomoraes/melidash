@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
     const users = result || [];
     const inviterIds = users.filter(u => u.invited_by).map(u => u.invited_by);
     
-    let inviters: any[] = [];
+    let inviters: { id: string; name: string; email: string }[] = [];
     if (inviterIds.length > 0) {
       const { data: inviterData } = await supabase
         .from('users')
