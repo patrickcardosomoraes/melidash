@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { dbHelpers } from '@/lib/db';
+import { supabaseDbHelpers } from '@/lib/supabase-db';
 import { loginSchema } from '@/lib/validation';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
 
     // Buscar usuário no banco de dados
     console.log('🔍 Looking for user in database...');
-    const user = await dbHelpers.getUserByEmail(email);
+    const user = await supabaseDbHelpers.getUserByEmail(email);
     console.log('📊 User lookup result:', { found: !!user });
     
     if (!user) {

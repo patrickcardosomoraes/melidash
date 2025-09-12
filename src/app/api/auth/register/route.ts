@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { dbHelpers } from '@/lib/db';
+import { supabaseDbHelpers } from '@/lib/supabase-db';
 import { registerSchema } from '@/lib/validation';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
 
     // Verificar se o usuário já existe
     console.log('🔍 Checking if user exists...');
-    const existingUser = await dbHelpers.getUserByEmail(email);
+    const existingUser = await supabaseDbHelpers.getUserByEmail(email);
     console.log('📊 User check result:', { exists: !!existingUser });
     
     if (existingUser) {
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
 
     // Criar usuário no banco de dados
     console.log('👤 Creating user in database...');
-    const newUser = await dbHelpers.createUser({
+    const newUser = await supabaseDbHelpers.createUser({
       email,
       name,
       password: hashedPassword,
