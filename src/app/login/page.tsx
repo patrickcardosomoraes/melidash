@@ -1,22 +1,68 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ShoppingBag, Eye, EyeOff } from 'lucide-react';
 import { useMercadoLivreAuth } from '@/hooks/use-mercado-livre-auth';
 import { useAuthStore } from '@/lib/stores/auth';
 
 export default function LoginPage() {
+  const router = useRouter();
   const { login: mlLogin, isLoading: mlLoading } = useMercadoLivreAuth();
-  const { loginWithCredentials, register, isLoading, error, clearError } = useAuthStore();
+  const { loginWithCredentials, register, isLoading, error, clearError, isAuthenticated } = useAuthStore();
   
   const [showPassword, setShowPassword] = useState(false);
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
   const [registerForm, setRegisterForm] = useState({ name: '', email: '', password: '', confirmPassword: '' });
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState('');
+  const [forgotPasswordLoading, setForgotPasswordLoading] = useState(false);
+  const [forgotPasswordMessage, setForgotPasswordMessage] = useState('');
+
+  // Redirecionar para dashboard se já estiver autenticado
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push('/dashboard');
+    }
+  }, [isAuthenticated, router]);
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setForgotPasswordLoading(true);
+    setForgotPasswordMessage('');
+    
+    try {
+      const response = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: forgotPasswordEmail }),
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        setForgotPasswordMessage(data.message);
+        // Em desenvolvimento, mostrar o link de reset
+        if (data.resetLink) {
+          setForgotPasswordMessage(data.message + '\n\nLink de desenvolvimento: ' + data.resetLink);
+        }
+      } else {
+        setForgotPasswordMessage(data.error || 'Erro ao enviar email de recuperação');
+      }
+    } catch (error) {
+      setForgotPasswordMessage('Erro ao enviar email de recuperação');
+    } finally {
+      setForgotPasswordLoading(false);
+    }
+  };
 
   const handleMercadoLivreLogin = () => {
     mlLogin();
@@ -117,6 +163,17 @@ export default function LoginPage() {
                   <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading ? 'Entrando...' : 'Entrar'}
                   </Button>
+                  
+                  <div className="text-center">
+                    <Button
+                      type="button"
+                      variant="link"
+                      className="text-sm text-muted-foreground hover:text-primary"
+                      onClick={() => setShowForgotPassword(true)}
+                    >
+                      Esqueci minha senha
+                    </Button>
+                  </div>
                 </form>
               </TabsContent>
               
@@ -208,6 +265,60 @@ export default function LoginPage() {
           </CardContent>
         </Card>
       </div>
+      
+      {/* Modal de Esqueci Minha Senha */}
+      <Dialog open={showForgotPassword} onOpenChange={setShowForgotPassword}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Esqueci minha senha</DialogTitle>
+            <DialogDescription>
+              Digite seu email para receber as instruções de recuperação de senha.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <form onSubmit={handleForgotPassword} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="forgot-email">Email</Label>
+              <Input
+                id="forgot-email"
+                type="email"
+                placeholder="seu@email.com"
+                value={forgotPasswordEmail}
+                onChange={(e) => setForgotPasswordEmail(e.target.value)}
+                required
+              />
+            </div>
+            
+            {forgotPasswordMessage && (
+              <div className="text-sm p-3 rounded-md bg-blue-50 text-blue-700 whitespace-pre-line">
+                {forgotPasswordMessage}
+              </div>
+            )}
+            
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                className="flex-1"
+                onClick={() => {
+                  setShowForgotPassword(false);
+                  setForgotPasswordEmail('');
+                  setForgotPasswordMessage('');
+                }}
+              >
+                Cancelar
+              </Button>
+              <Button
+                type="submit"
+                className="flex-1"
+                disabled={forgotPasswordLoading}
+              >
+                {forgotPasswordLoading ? 'Enviando...' : 'Enviar'}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

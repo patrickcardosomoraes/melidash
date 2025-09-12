@@ -120,6 +120,8 @@ Após o deploy, atualize:
 |------|-----------|--------|
 | `/` | Landing page | ✅ |
 | `/login` | Página de login | ✅ |
+| `/register` | Registro com sistema de convites | ✅ |
+| `/admin/invites` | Gestão de convites (admin) | ✅ |
 | `/dashboard` | Dashboard principal | ✅ |
 | `/dashboard-builder` | Constructor de dashboard personalizado | ✅ |
 | `/products` | Gestão de produtos | ✅ |
@@ -180,6 +182,117 @@ Após o deploy, atualize:
 - [ ] Mobile app (React Native)
 - [ ] Integração com outros marketplaces
 
+## 🔐 Sistema de Convites
+
+O MeliDash implementa um sistema de registro baseado em convites para controle de acesso:
+
+### Funcionalidades
+- **Registro Controlado**: Apenas usuários com convites válidos podem se registrar
+- **Gestão de Convites**: Admins podem criar, visualizar e gerenciar convites
+- **Expiração Automática**: Convites têm prazo de validade configurável
+- **Roles de Usuário**: Sistema de permissões com roles ADMIN e USER
+
+### Como Funciona
+
+#### 1. Criação de Convites (Admin)
+- Acesse `/admin/invites` (apenas admins)
+- Preencha o email do convidado
+- O sistema gera um token único e link de convite
+- Convite expira em 7 dias por padrão
+
+#### 2. Aceitação de Convites
+- Usuário acessa o link: `/register?token=TOKEN_DO_CONVITE`
+- Sistema valida o token e email
+- Usuário preenche dados (nome, senha)
+- Conta é criada automaticamente
+
+#### 3. Estrutura do Banco
+```sql
+-- Tabela de convites
+CREATE TABLE invitations (
+    id UUID PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    token VARCHAR(255) UNIQUE NOT NULL,
+    invited_by UUID REFERENCES users(id),
+    status invite_status DEFAULT 'PENDING',
+    expires_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Enum de status
+CREATE TYPE invite_status AS ENUM ('PENDING', 'ACCEPTED', 'EXPIRED', 'REVOKED');
+
+-- Enum de roles
+CREATE TYPE user_role AS ENUM ('ADMIN', 'USER');
+```
+
+### Endpoints da API
+
+#### Gerenciamento de Convites
+```typescript
+// GET /api/admin/invites - Listar convites
+// POST /api/admin/invites - Criar convite
+// PUT /api/admin/invites - Atualizar status
+
+// Exemplo de criação
+POST /api/admin/invites
+{
+  "email": "usuario@exemplo.com"
+}
+```
+
+#### Registro com Convite
+```typescript
+// GET /api/auth/register?token=TOKEN - Verificar convite
+// POST /api/auth/register - Registrar usuário
+
+// Exemplo de registro
+POST /api/auth/register
+{
+  "email": "usuario@exemplo.com",
+  "name": "Nome do Usuário",
+  "password": "senha123",
+  "token": "TOKEN_DO_CONVITE"
+}
+```
+
+### Configuração Inicial
+
+#### 1. Execute as Migrações
+```bash
+# Execute a migração do sistema de convites
+psql -d melidash -f supabase/migrations/002_invite_system.sql
+```
+
+#### 2. Usuário Admin Inicial
+O sistema cria automaticamente um usuário admin:
+- **Email**: admin@melidash.com
+- **Senha**: admin123 (altere imediatamente)
+- **Role**: ADMIN
+
+#### 3. Primeiro Acesso
+1. Faça login com as credenciais admin
+2. Acesse `/admin/invites`
+3. Crie convites para outros usuários
+4. Altere a senha do admin
+
+### Segurança
+
+- **Tokens Únicos**: Cada convite tem token criptograficamente seguro
+- **Expiração**: Convites expiram automaticamente
+- **Validação**: Email deve corresponder ao convite
+- **Limpeza**: Sistema remove convites expirados automaticamente
+- **Permissões**: Apenas admins podem gerenciar convites
+
+### Páginas do Sistema
+
+| Rota | Descrição | Acesso |
+|------|-----------|--------|
+| `/register` | Registro público (requer token) | Público |
+| `/register?token=X` | Registro com convite | Token válido |
+| `/admin/invites` | Gestão de convites | Admin apenas |
+| `/login` | Login do sistema | Público |
+
 ## 🔧 Scripts Disponíveis
 
 ```bash
@@ -194,6 +307,10 @@ npx prisma migrate dev    # Executa migrações em desenvolvimento
 npx prisma generate       # Gera cliente Prisma
 npx prisma studio         # Interface visual do banco
 npx prisma db push        # Sincroniza schema com banco
+
+# Migrações Supabase
+psql -d melidash -f supabase/migrations/001_initial_schema.sql
+psql -d melidash -f supabase/migrations/002_invite_system.sql
 ```
 
 ## 🐛 Troubleshooting
