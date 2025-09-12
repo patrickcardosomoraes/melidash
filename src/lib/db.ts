@@ -18,10 +18,6 @@ export const dbHelpers = {
   async getUserByEmail(email: string) {
     return await db.user.findUnique({
       where: { email },
-      include: {
-        products: true,
-        automationRules: true,
-      },
     });
   },
 

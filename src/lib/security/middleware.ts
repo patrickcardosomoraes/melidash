@@ -65,26 +65,33 @@ export async function securityMiddleware(request: NextRequest) {
 
 // Verificar User-Agent suspeito
 function isSuspiciousUserAgent(userAgent: string): boolean {
+  // Em desenvolvimento, não bloquear nenhum user-agent
+  if (process.env.NODE_ENV === 'development') {
+    return false;
+  }
+
   const suspiciousPatterns = [
     /bot/i,
     /crawler/i,
     /spider/i,
     /scraper/i,
-    /curl/i,
     /wget/i,
     /python/i,
     /java/i,
     /go-http-client/i
   ];
 
-  // Permitir bots legítimos
+  // Permitir bots legítimos e ferramentas de desenvolvimento
   const allowedBots = [
     /googlebot/i,
     /bingbot/i,
     /slackbot/i,
     /twitterbot/i,
     /facebookexternalhit/i,
-    /linkedinbot/i
+    /linkedinbot/i,
+    /curl/i, // Permitir curl para testes
+    /postman/i, // Permitir Postman para testes
+    /insomnia/i // Permitir Insomnia para testes
   ];
 
   const isSuspicious = suspiciousPatterns.some(pattern => pattern.test(userAgent));
