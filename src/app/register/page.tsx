@@ -250,7 +250,7 @@ export default function RegisterPage() {
                 onChange={handleInputChange}
                 placeholder="seu@email.com"
                 required
-                disabled={loading || (inviteToken && inviteValid === true)}
+                disabled={loading || Boolean(inviteToken && inviteValid === true)}
                 className={inviteToken && inviteValid ? 'bg-gray-50' : ''}
               />
               {inviteToken && inviteValid && (
