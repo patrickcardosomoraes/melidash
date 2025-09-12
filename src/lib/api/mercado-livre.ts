@@ -4,10 +4,27 @@ import { MLProduct, MLUser, MLTokenData, MLOrder, MLQuestion } from '@/types/api
 const ML_API_BASE_URL = 'https://api.mercadolibre.com';
 const ML_AUTH_URL = 'https://auth.mercadolivre.com.br/authorization';
 
-// Configurações OAuth (em produção, usar variáveis de ambiente)
-const CLIENT_ID = process.env.NEXT_PUBLIC_ML_CLIENT_ID || 'your_client_id';
-const CLIENT_SECRET = process.env.ML_CLIENT_SECRET || 'your_client_secret';
-const REDIRECT_URI = process.env.NEXT_PUBLIC_ML_REDIRECT_URI || `${process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'https://your-app.vercel.app'}/api/auth/mercado-livre/callback`;
+// Configurações OAuth - usando variáveis de ambiente
+const getClientId = () => process.env.NEXT_PUBLIC_ML_CLIENT_ID;
+const getClientSecret = () => process.env.ML_CLIENT_SECRET;
+const getRedirectUri = () => process.env.NEXT_PUBLIC_ML_REDIRECT_URI || process.env.ML_REDIRECT_URI;
+
+// Função para validar credenciais
+const validateCredentials = () => {
+  const clientId = getClientId();
+  const clientSecret = getClientSecret();
+  const redirectUri = getRedirectUri();
+  
+  if (!clientId || !clientSecret) {
+    throw new Error('Credenciais do Mercado Livre não configuradas. Verifique NEXT_PUBLIC_ML_CLIENT_ID e ML_CLIENT_SECRET nas variáveis de ambiente.');
+  }
+  
+  if (!redirectUri) {
+    throw new Error('REDIRECT_URI do Mercado Livre não configurada. Verifique NEXT_PUBLIC_ML_REDIRECT_URI nas variáveis de ambiente.');
+  }
+  
+  return { clientId, clientSecret, redirectUri };
+}
 
 export class MercadoLivreAPI {
   private accessToken: string | null = null;
@@ -20,10 +37,12 @@ export class MercadoLivreAPI {
 
   // Gerar URL de autorização OAuth
   getAuthUrl(state?: string): string {
+    const { clientId, redirectUri } = validateCredentials();
+    
     const params = new URLSearchParams({
       response_type: 'code',
-      client_id: CLIENT_ID,
-      redirect_uri: REDIRECT_URI,
+      client_id: clientId,
+      redirect_uri: redirectUri,
       scope: 'read write offline_access'
     });
 
@@ -35,9 +54,11 @@ export class MercadoLivreAPI {
     return `${ML_AUTH_URL}?${params.toString()}`;
   }
 
-  // Trocar código de autorização por token de acesso
-  async exchangeCodeForToken(code: string): Promise<MLTokenData> {
-    const response = await fetch(`${ML_API_BASE_URL}/oauth/token`, {
+  // Trocar código de autorização por tokens
+  async exchangeCodeForTokens(code: string): Promise<MLTokenData> {
+    const { clientId, clientSecret, redirectUri } = validateCredentials();
+    
+    const response = await fetch('https://api.mercadolibre.com/oauth/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -45,10 +66,10 @@ export class MercadoLivreAPI {
       },
       body: new URLSearchParams({
         grant_type: 'authorization_code',
-        client_id: CLIENT_ID,
-        client_secret: CLIENT_SECRET,
+        client_id: clientId,
+        client_secret: clientSecret,
         code,
-        redirect_uri: REDIRECT_URI
+        redirect_uri: redirectUri
       })
     });
 
@@ -63,22 +84,23 @@ export class MercadoLivreAPI {
     return tokenData;
   }
 
-  // Renovar token de acesso
+  // Renovar token de acesso usando refresh token
   async refreshAccessToken(): Promise<MLTokenData> {
     if (!this.refreshToken) {
       throw new Error('Refresh token não disponível');
     }
 
+    const { clientId, clientSecret } = validateCredentials();
+
     const response = await fetch(`${ML_API_BASE_URL}/oauth/token`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Accept': 'application/json'
+        'Content-Type': 'application/x-www-form-urlencoded'
       },
       body: new URLSearchParams({
         grant_type: 'refresh_token',
-        client_id: CLIENT_ID,
-        client_secret: CLIENT_SECRET,
+        client_id: clientId,
+        client_secret: clientSecret,
         refresh_token: this.refreshToken
       })
     });
