@@ -74,7 +74,12 @@ export function useMercadoLivreAuth() {
   // Iniciar processo de autenticação
   const login = useCallback(() => {
     const api = getMercadoLivreAPI();
-    const authUrl = api.getAuthUrl();
+    
+    // Gerar state seguro para validação
+    const state = crypto.randomUUID();
+    localStorage.setItem('ml_auth_state', state);
+    
+    const authUrl = api.getAuthUrl(state);
     window.location.href = authUrl;
   }, []);
 

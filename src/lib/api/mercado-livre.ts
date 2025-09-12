@@ -19,13 +19,18 @@ export class MercadoLivreAPI {
   }
 
   // Gerar URL de autorização OAuth
-  getAuthUrl(): string {
+  getAuthUrl(state?: string): string {
     const params = new URLSearchParams({
       response_type: 'code',
       client_id: CLIENT_ID,
       redirect_uri: REDIRECT_URI,
       scope: 'read write offline_access'
     });
+
+    // Adicionar parâmetro state para segurança adicional
+    if (state) {
+      params.set('state', state);
+    }
 
     return `${ML_AUTH_URL}?${params.toString()}`;
   }

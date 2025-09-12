@@ -4,7 +4,8 @@ import { MercadoLivreAPI } from '@/lib/api/mercado-livre';
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-  const code = searchParams.get('code'); // userId pode ser passado via state
+    const code = searchParams.get('code');
+    const state = searchParams.get('state');
     const error = searchParams.get('error');
 
     // Verificar se houve erro na autorização
@@ -19,6 +20,14 @@ export async function GET(request: NextRequest) {
     if (!code) {
       return NextResponse.redirect(
         new URL('/dashboard?error=no_auth_code', request.url)
+      );
+    }
+
+    // Validar state para segurança (em produção, validar contra valor armazenado)
+    if (!state) {
+      console.error('Missing state parameter');
+      return NextResponse.redirect(
+        new URL('/dashboard?error=invalid_state', request.url)
       );
     }
 
