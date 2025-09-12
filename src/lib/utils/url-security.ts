@@ -12,9 +12,6 @@ const TRUSTED_DOMAINS = [
   'mla-s2-p.mlstatic.com',
   'mlb-s1-p.mlstatic.com',
   'mlb-s2-p.mlstatic.com',
-  'js-agent.newrelic.com',
-  'bam.nr-data.net',
-  '*.nr-data.net',
   'print1.mercadoclics.com'
 ];
 

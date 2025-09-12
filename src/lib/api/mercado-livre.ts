@@ -94,7 +94,7 @@ export class MercadoLivreAPI {
     return tokenData;
   }
 
-  // Fazer requisição autenticada
+  // Fazer requisição autenticada seguindo recomendações de segurança do ML
   private async makeAuthenticatedRequest<T>(
     endpoint: string,
     options: RequestInit = {}
@@ -103,11 +103,17 @@ export class MercadoLivreAPI {
       throw new Error('Token de acesso não disponível');
     }
 
+    // Validar URL do endpoint para segurança
+    if (!endpoint.startsWith('/')) {
+      throw new Error('Endpoint deve começar com /');
+    }
+
     const response = await fetch(`${ML_API_BASE_URL}${endpoint}`, {
       ...options,
       headers: {
         'Authorization': `Bearer ${this.accessToken}`,
         'Content-Type': 'application/json',
+        'User-Agent': 'MeliDash/1.0',
         ...options.headers
       }
     });
