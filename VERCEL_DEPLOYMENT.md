@@ -5,8 +5,11 @@
 ### 🔐 Autenticação Mercado Livre
 ```bash
 # Credenciais da aplicação no Mercado Livre
+# Use NEXT_PUBLIC_ML_CLIENT_ID no frontend; ML_CLIENT_ID é aceito como fallback no servidor
+NEXT_PUBLIC_ML_CLIENT_ID=seu_client_id_aqui
 ML_CLIENT_ID=seu_client_id_aqui
 ML_CLIENT_SECRET=seu_client_secret_aqui
+NEXT_PUBLIC_ML_REDIRECT_URI=https://seu-app.vercel.app/api/auth/mercado-livre/callback
 ML_REDIRECT_URI=https://seu-app.vercel.app/api/auth/mercado-livre/callback
 ```
 
@@ -81,7 +84,7 @@ git push origin main
 1. Acesse [Mercado Livre Developers](https://developers.mercadolivre.com.br)
 2. Vá em **Suas aplicações** → **Sua aplicação**
 3. Atualize as URLs:
-   - **URL de Callback**: `https://seu-app.vercel.app/api/auth/mercado-livre/callback`
+   - **URL de Callback**: `https://seu-app.vercel.app/api/auth/mercado-livre/callback` (deve ser idêntica à variável NEXT_PUBLIC_ML_REDIRECT_URI/ML_REDIRECT_URI)
    - **URL de Notificação**: `https://seu-app.vercel.app/api/webhooks/mercado-livre`
 4. Configure os tópicos de notificação desejados
 

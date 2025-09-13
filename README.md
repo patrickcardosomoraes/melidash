@@ -44,8 +44,11 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY="your-supabase-anon-key"
 SUPABASE_SERVICE_ROLE_KEY="your-supabase-service-role-key"
 
 # Mercado Livre API
+# Use NEXT_PUBLIC_* no frontend; ML_* é aceito como fallback no servidor
+NEXT_PUBLIC_ML_CLIENT_ID="your-mercado-livre-client-id"
 ML_CLIENT_ID="your-mercado-livre-client-id"
 ML_CLIENT_SECRET="your-mercado-livre-client-secret"
+NEXT_PUBLIC_ML_REDIRECT_URI="https://your-vercel-domain.vercel.app/api/auth/mercado-livre/callback"
 ML_REDIRECT_URI="https://your-vercel-domain.vercel.app/api/auth/mercado-livre/callback"
 
 # NextAuth
@@ -101,9 +104,9 @@ Adicione todas as variáveis do `.env.local` no painel da Vercel:
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
-- `ML_CLIENT_ID`
+- `NEXT_PUBLIC_ML_CLIENT_ID` (e/ou `ML_CLIENT_ID`)
 - `ML_CLIENT_SECRET`
-- `ML_REDIRECT_URI`
+- `NEXT_PUBLIC_ML_REDIRECT_URI` (e/ou `ML_REDIRECT_URI`)
 - `NEXTAUTH_URL`
 - `NEXTAUTH_SECRET`
 - `OPENAI_API_KEY`

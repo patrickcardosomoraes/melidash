@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
     
     try {
       // Trocar código por tokens
-      const tokenData = await mlApi.exchangeCodeForToken(code);
+      const tokenData = await mlApi.exchangeCodeForTokens(code);
       
       // Obter informações do usuário do ML
       const mlApiWithToken = new MercadoLivreAPI(tokenData.accessToken, tokenData.refreshToken);

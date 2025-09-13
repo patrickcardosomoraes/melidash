@@ -5,7 +5,8 @@ const ML_API_BASE_URL = 'https://api.mercadolibre.com';
 const ML_AUTH_URL = 'https://auth.mercadolivre.com.br/authorization';
 
 // Configurações OAuth - usando variáveis de ambiente
-const getClientId = () => process.env.NEXT_PUBLIC_ML_CLIENT_ID;
+// Prioriza variáveis públicas (cliente) e faz fallback para server-side
+const getClientId = () => process.env.NEXT_PUBLIC_ML_CLIENT_ID || process.env.ML_CLIENT_ID;
 const getClientSecret = () => process.env.ML_CLIENT_SECRET;
 const getRedirectUri = () => process.env.NEXT_PUBLIC_ML_REDIRECT_URI || process.env.ML_REDIRECT_URI;
 
@@ -16,11 +17,11 @@ const validateCredentials = () => {
   const redirectUri = getRedirectUri();
   
   if (!clientId || !clientSecret) {
-    throw new Error('Credenciais do Mercado Livre não configuradas. Verifique NEXT_PUBLIC_ML_CLIENT_ID e ML_CLIENT_SECRET nas variáveis de ambiente.');
+    throw new Error('Credenciais do Mercado Livre não configuradas. Defina NEXT_PUBLIC_ML_CLIENT_ID (ou ML_CLIENT_ID) e ML_CLIENT_SECRET.');
   }
   
   if (!redirectUri) {
-    throw new Error('REDIRECT_URI do Mercado Livre não configurada. Verifique NEXT_PUBLIC_ML_REDIRECT_URI nas variáveis de ambiente.');
+    throw new Error('REDIRECT_URI do Mercado Livre não configurada. Defina NEXT_PUBLIC_ML_REDIRECT_URI (ou ML_REDIRECT_URI).');
   }
   
   return { clientId, clientSecret, redirectUri };
