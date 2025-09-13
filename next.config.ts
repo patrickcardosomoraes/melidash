@@ -15,12 +15,6 @@ const nextConfig: NextConfig = {
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     VERCEL_URL: process.env.VERCEL_URL,
   },
-  // Desabilitar analytics automáticos que podem causar chamadas externas
-  analytics: false,
-  // Configurações de segurança adicionais
-  experimental: {
-    serverComponentsExternalPackages: ['@prisma/client'],
-  },
 };
 
 export default nextConfig;

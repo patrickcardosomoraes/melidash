@@ -136,7 +136,7 @@ export async function POST(request: NextRequest) {
     );
 
     // Remover senha do objeto user antes de retornar
-    const { password: _, ...userWithoutPassword } = newUser;
+    const { password: __unused, ...userWithoutPassword } = newUser;
 
     // TODO: If registration was via invitation, mark invitation as accepted
     if (token) {

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import bcrypt from 'bcryptjs';
 
 const resetPasswordSchema = z.object({
   token: z.string().min(1, 'Token é obrigatório'),
@@ -26,7 +25,7 @@ export async function POST(request: NextRequest) {
     const validatedData = resetPasswordSchema.parse(body);
     console.log('✅ Data validation passed');
     
-    const { token, password } = validatedData;
+    const { token, password: __unused } = validatedData;
     
     // TODO: Buscar usuário pelo token de reset
     // Por enquanto, vamos simular a busca
