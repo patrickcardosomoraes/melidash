@@ -45,7 +45,7 @@ function AuthCallbackContent() {
 
         // Trocar código por token
         const mlApi = getMercadoLivreAPI();
-        const tokenData = await mlApi.exchangeCodeForToken(code);
+        const tokenData = await mlApi.exchangeCodeForTokens(code);
 
         // Salvar tokens no localStorage (em produção, usar cookies seguros)
         localStorage.setItem('ml_access_token', tokenData.accessToken);
