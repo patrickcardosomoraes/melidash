@@ -15,7 +15,7 @@ import { useAuthStore } from '@/lib/stores/auth';
 export default function LoginPage() {
   const router = useRouter();
   const { login: mlLogin, isLoading: mlLoading } = useMercadoLivreAuth();
-  const { loginWithCredentials, register, isLoading, clearError, isAuthenticated } = useAuthStore();
+  const { loginWithCredentials, register, isLoading, error, clearError, isAuthenticated } = useAuthStore();
   
   const [showPassword, setShowPassword] = useState(false);
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
