@@ -78,8 +78,8 @@ export async function POST(request: NextRequest) {
     );
 
     // Remover senha do objeto user antes de retornar
-    const userWithoutPassword: typeof user = { ...user } as any;
-    delete (userWithoutPassword as any).password;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _password, ...userWithoutPassword } = user;
 
     return NextResponse.json({
       user: userWithoutPassword,

@@ -136,8 +136,8 @@ export async function POST(request: NextRequest) {
     );
 
     // Remover senha do objeto user antes de retornar
-    const userWithoutPassword: typeof newUser = { ...newUser } as any;
-    delete (userWithoutPassword as any).password;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _password, ...userWithoutPassword } = newUser;
 
     // TODO: If registration was via invitation, mark invitation as accepted
     if (token) {

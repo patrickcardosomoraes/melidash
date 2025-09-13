@@ -7,16 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
-import {
-  Target,
-  Plus,
-  Edit,
-  Trash2,
-  TrendingUp,
-  CheckCircle,
-  AlertCircle,
-  Clock
-} from 'lucide-react';
+import { Target, Plus, Trash2, TrendingUp, CheckCircle, AlertCircle, Clock } from 'lucide-react';
 import { getReputationService } from '@/lib/services/reputation-service';
 import { ReputationGoal, ReputationMetrics } from '@/types/reputation';
 
@@ -28,7 +19,7 @@ export function GoalsPanel({ onRefresh }: GoalsPanelProps) {
   const [goals, setGoals] = useState<ReputationGoal[]>([]);
   const [metrics, setMetrics] = useState<ReputationMetrics | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [editingGoal, setEditingGoal] = useState<ReputationGoal | null>(null);
+  // Edição de metas será implementada futuramente
   const [loading, setLoading] = useState(true);
   
   const [formData, setFormData] = useState({
@@ -330,13 +321,6 @@ export function GoalsPanel({ onRefresh }: GoalsPanelProps) {
                     </div>
                     
                     <div className="flex items-center gap-2">
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => setEditingGoal(goal)}
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
                       <Button
                         size="sm"
                         variant="ghost"
