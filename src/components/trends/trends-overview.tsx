@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
@@ -55,13 +55,9 @@ export function TrendsOverview() {
     biggestThreat: { competitorName: string; performance: { threats: string } };
   } | null>(null);
 
-  const trendsService = getTrendsService();
+  const trendsService = useMemo(() => getTrendsService(), []);
 
-  useEffect(() => {
-    loadData();
-  }, [selectedPeriod, selectedCategory]);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setIsLoading(true);
     try {
       const [trendsData, competitorsData, alertsData] = await Promise.all([
@@ -97,7 +93,11 @@ export function TrendsOverview() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [trendsService, selectedPeriod, selectedCategory]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) {

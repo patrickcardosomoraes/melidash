@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -34,7 +34,7 @@ export function AIAssistantOverview() {
     byStatus: { new: 0, viewed: 0, applied: 0, dismissed: 0 }
   });
 
-  const aiService = getAIAssistantService();
+  const aiService = useMemo(() => getAIAssistantService(), []);
 
   const loadData = useCallback(async () => {
     try {
@@ -63,7 +63,7 @@ export function AIAssistantOverview() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [aiService]);
 
   useEffect(() => {
     loadData();

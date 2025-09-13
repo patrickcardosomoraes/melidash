@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -30,14 +30,7 @@ function RegisterForm() {
   const [inviteEmail, setInviteEmail] = useState('');
   const [verifyingInvite, setVerifyingInvite] = useState(false);
 
-  // Verify invitation token on component mount
-  useEffect(() => {
-    if (inviteToken) {
-      verifyInvitationToken();
-    }
-  }, [inviteToken]);
-
-  const verifyInvitationToken = async () => {
+  const verifyInvitationToken = useCallback(async () => {
     if (!inviteToken) return;
     
     setVerifyingInvite(true);
@@ -60,7 +53,14 @@ function RegisterForm() {
     } finally {
       setVerifyingInvite(false);
     }
-  };
+  }, [inviteToken]);
+
+  // Verify invitation token on component mount/update
+  useEffect(() => {
+    if (inviteToken) {
+      verifyInvitationToken();
+    }
+  }, [inviteToken, verifyInvitationToken]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

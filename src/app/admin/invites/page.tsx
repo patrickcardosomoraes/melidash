@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -71,11 +71,7 @@ export default function AdminInvitesPage() {
     expiresInDays: 7
   });
 
-  useEffect(() => {
-    fetchInvites();
-  }, [statusFilter]);
-
-  const fetchInvites = async () => {
+  const fetchInvites = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
@@ -97,7 +93,11 @@ export default function AdminInvitesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [statusFilter]);
+
+  useEffect(() => {
+    fetchInvites();
+  }, [fetchInvites]);
 
   const handleCreateInvite = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
@@ -22,9 +22,9 @@ export function ReputationOverview() {
   const [activeTab, setActiveTab] = useState('overview');
   const [autoRefresh, setAutoRefresh] = useState(false);
 
-  const reputationService = getReputationService();
+  const reputationService = useMemo(() => getReputationService(), []);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
       const [metricsData, reviewsData, alertsData] = await Promise.all([
@@ -41,11 +41,11 @@ export function ReputationOverview() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [reputationService]);
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [loadData]);
 
   useEffect(() => {
     if (autoRefresh) {
@@ -56,7 +56,7 @@ export function ReputationOverview() {
 
       return () => clearInterval(interval);
     }
-  }, [autoRefresh]);
+  }, [autoRefresh, reputationService, loadData]);
 
   const getTrendIcon = (trend: string) => {
     switch (trend) {
