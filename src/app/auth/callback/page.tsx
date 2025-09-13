@@ -28,48 +28,51 @@ function AuthCallbackContent() {
   useEffect(() => {
     const handleCallback = async () => {
       try {
-        const code = searchParams.get('code');
-        const error = searchParams.get('error');
-
-        if (error) {
-          setError(`Erro na autorização: ${error}`);
+        const authError = searchParams.get('error');
+        if (authError) {
+          setError(`Erro na autorização: ${authError}`);
           setAuthState('error');
           return;
         }
 
-        if (!code) {
-          setError('Código de autorização não encontrado');
+        const getCookie = (name: string) => {
+          const value = `; ${document.cookie}`;
+          const parts = value.split(`; ${name}=`);
+          if (parts.length === 2) return parts.pop()!.split(';').shift() || '';
+          return '';
+        };
+
+        const accessToken = localStorage.getItem('ml_access_token') || getCookie('ml_access_token');
+        const refreshToken = localStorage.getItem('ml_refresh_token') || getCookie('ml_refresh_token');
+
+        if (!accessToken || !refreshToken) {
+          setError('Tokens de autenticação não encontrados. Tente novamente.');
           setAuthState('error');
           return;
         }
 
-        // Trocar código por token
-        const mlApi = getMercadoLivreAPI();
-        const tokenData = await mlApi.exchangeCodeForTokens(code);
-
-        // Salvar tokens no localStorage (em produção, usar cookies seguros)
-        localStorage.setItem('ml_access_token', tokenData.accessToken);
-        localStorage.setItem('ml_refresh_token', tokenData.refreshToken);
-        localStorage.setItem('ml_user_id', tokenData.userId.toString());
+        // Persistir em localStorage e limpar cookies transitórios
+        localStorage.setItem('ml_access_token', accessToken);
+        localStorage.setItem('ml_refresh_token', refreshToken);
+        document.cookie = 'ml_access_token=; Max-Age=0; path=/;';
+        document.cookie = 'ml_refresh_token=; Max-Age=0; path=/;';
 
         // Obter informações do usuário
+        const mlApi = getMercadoLivreAPI(accessToken, refreshToken);
         const mlUser = await mlApi.getUserInfo();
-        const userInfo: UserInfo = {
+        const info: UserInfo = {
           id: mlUser.id.toString(),
           nickname: mlUser.nickname,
           email: mlUser.email,
           first_name: mlUser.firstName,
           last_name: mlUser.lastName
         };
-        setUserInfo(userInfo);
-
+        setUserInfo(info);
         setAuthState('success');
 
-        // Redirecionar para o dashboard após 3 segundos
         setTimeout(() => {
           router.push('/dashboard');
-        }, 3000);
-
+        }, 2000);
       } catch (err) {
         console.error('Erro no callback de autenticação:', err);
         setError(err instanceof Error ? err.message : 'Erro desconhecido');

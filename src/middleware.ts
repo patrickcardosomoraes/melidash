@@ -31,7 +31,8 @@ export async function middleware(request: NextRequest) {
     '/api/auth/login',
     '/api/auth/register',
     '/api/auth/mercado-livre',
-    '/api/auth/callback'
+    '/api/auth/callback',
+    '/auth/callback'
   ];
   
   // Permitir acesso a rotas públicas
