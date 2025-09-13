@@ -9,8 +9,8 @@
 NEXT_PUBLIC_ML_CLIENT_ID=seu_client_id_aqui
 ML_CLIENT_ID=seu_client_id_aqui
 ML_CLIENT_SECRET=seu_client_secret_aqui
-NEXT_PUBLIC_ML_REDIRECT_URI=https://seu-app.vercel.app/api/auth/mercado-livre/callback
-ML_REDIRECT_URI=https://seu-app.vercel.app/api/auth/mercado-livre/callback
+NEXT_PUBLIC_ML_REDIRECT_URI=https://melidash.vercel.app/api/auth/mercado-livre/callback
+ML_REDIRECT_URI=https://melidash.vercel.app/api/auth/mercado-livre/callback
 ```
 
 ### 🗄️ Banco de Dados (Supabase)
@@ -28,7 +28,7 @@ DIRECT_URL=postgresql://postgres:[password]@db.[ref].supabase.co:5432/postgres
 ### 🔑 NextAuth.js
 ```bash
 # Configurações de autenticação
-NEXTAUTH_URL=https://seu-app.vercel.app
+NEXTAUTH_URL=https://melidash.vercel.app
 NEXTAUTH_SECRET=sua_secret_key_super_segura_aqui
 ```
 
@@ -84,8 +84,8 @@ git push origin main
 1. Acesse [Mercado Livre Developers](https://developers.mercadolivre.com.br)
 2. Vá em **Suas aplicações** → **Sua aplicação**
 3. Atualize as URLs:
-   - **URL de Callback**: `https://seu-app.vercel.app/api/auth/mercado-livre/callback` (deve ser idêntica à variável NEXT_PUBLIC_ML_REDIRECT_URI/ML_REDIRECT_URI)
-   - **URL de Notificação**: `https://seu-app.vercel.app/api/webhooks/mercado-livre`
+   - **URL de Callback**: `https://melidash.vercel.app/api/auth/mercado-livre/callback` (deve ser idêntica à variável NEXT_PUBLIC_ML_REDIRECT_URI/ML_REDIRECT_URI)
+   - **URL de Notificação**: `https://melidash.vercel.app/api/webhooks/mercado-livre`
 4. Configure os tópicos de notificação desejados
 
 ### 4. Testar em Produção

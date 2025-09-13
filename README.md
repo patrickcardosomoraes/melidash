@@ -48,18 +48,18 @@ SUPABASE_SERVICE_ROLE_KEY="your-supabase-service-role-key"
 NEXT_PUBLIC_ML_CLIENT_ID="your-mercado-livre-client-id"
 ML_CLIENT_ID="your-mercado-livre-client-id"
 ML_CLIENT_SECRET="your-mercado-livre-client-secret"
-NEXT_PUBLIC_ML_REDIRECT_URI="https://your-vercel-domain.vercel.app/api/auth/mercado-livre/callback"
-ML_REDIRECT_URI="https://your-vercel-domain.vercel.app/api/auth/mercado-livre/callback"
+NEXT_PUBLIC_ML_REDIRECT_URI="https://melidash.vercel.app/api/auth/mercado-livre/callback"
+ML_REDIRECT_URI="https://melidash.vercel.app/api/auth/mercado-livre/callback"
 
 # NextAuth
-NEXTAUTH_URL="https://your-vercel-domain.vercel.app"
+NEXTAUTH_URL="https://melidash.vercel.app"
 NEXTAUTH_SECRET="your-nextauth-secret-key"
 
 # OpenAI (para o assistente IA)
 OPENAI_API_KEY="your-openai-api-key"
 
 # Vercel (para deploy)
-VERCEL_URL="your-vercel-domain.vercel.app"
+VERCEL_URL="melidash.vercel.app"
 ```
 
 ### 4. Configure o banco de dados:
@@ -79,7 +79,7 @@ VERCEL_URL="your-vercel-domain.vercel.app"
 
 1. Acesse [Mercado Livre Developers](https://developers.mercadolivre.com.br/)
 2. Crie uma aplicação
-3. Configure a URL de callback: `https://your-vercel-domain.vercel.app/api/auth/mercado-livre/callback`
+3. Configure a URL de callback: `https://melidash.vercel.app/api/auth/mercado-livre/callback`
 4. Anote o `Client ID` e `Client Secret`
 
 ### 6. Execute o servidor de desenvolvimento:

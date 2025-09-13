@@ -53,7 +53,7 @@ export function GoalsPanel({ onRefresh }: GoalsPanelProps) {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [reputationService]);
 
   useEffect(() => {
     loadData();
@@ -75,32 +75,19 @@ export function GoalsPanel({ onRefresh }: GoalsPanelProps) {
       setShowCreateForm(false);
       setFormData({ metric: 'overall', target: 90, deadline: new Date() });
       loadData();
+      onRefresh?.();
     } catch (error) {
       console.error('Erro ao criar meta:', error);
     }
   };
 
-  const handleUpdateGoal = async () => {
-    if (!editingGoal || !metrics) return;
-    
-    try {
-      const currentValue = metrics[editingGoal.metric] as number;
-      await reputationService.updateReputationGoal(editingGoal.id, {
-        ...editingGoal,
-        current: currentValue
-      });
-      
-      setEditingGoal(null);
-      loadData();
-    } catch (error) {
-      console.error('Erro ao atualizar meta:', error);
-    }
-  };
+  // Update goal is not used in UI yet; will be implemented with edit dialog
 
   const handleDeleteGoal = async (goalId: string) => {
     try {
       await reputationService.deleteReputationGoal(goalId);
       loadData();
+      onRefresh?.();
     } catch (error) {
       console.error('Erro ao deletar meta:', error);
     }

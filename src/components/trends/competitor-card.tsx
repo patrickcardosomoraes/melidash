@@ -4,17 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { 
-  ExternalLink,
-  TrendingUp,
-  TrendingDown,
-  AlertTriangle,
-  Star,
-  DollarSign,
-  Package,
-  Users,
-  Activity
-} from 'lucide-react';
+import { ExternalLink, TrendingUp, AlertTriangle, Star, DollarSign, Users, Activity } from 'lucide-react';
 import { CompetitorMonitoring } from '@/types/trends';
 
 interface CompetitorCardProps {

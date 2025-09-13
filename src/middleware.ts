@@ -50,7 +50,7 @@ export async function middleware(request: NextRequest) {
       try {
         jwt.verify(jwtToken, JWT_SECRET);
         return NextResponse.next();
-      } catch (error) {
+      } catch {
         // Token JWT inválido, limpar cookie e continuar verificação
         const response = NextResponse.redirect(new URL('/login', request.url));
         response.cookies.delete('auth-token');

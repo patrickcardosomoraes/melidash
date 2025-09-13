@@ -6,19 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import {
-  Thermometer,
-  TrendingUp,
-  TrendingDown,
-  Minus,
-  Star,
-  MessageSquare,
-  AlertTriangle,
-  Target,
-  RefreshCw,
-  Filter,
-  Download
-} from 'lucide-react';
+import { TrendingUp, TrendingDown, Minus, Star, MessageSquare, AlertTriangle, RefreshCw, Download } from 'lucide-react';
 import { getReputationService } from '@/lib/services/reputation-service';
 import { ReputationMetrics, Review, ReputationAlert } from '@/types/reputation';
 import { ReputationThermometer } from './reputation-thermometer';

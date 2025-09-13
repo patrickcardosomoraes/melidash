@@ -9,27 +9,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
-import {
-  Settings,
-  User,
-  Bell,
-  Shield,
-  Palette,
-  Globe,
-  Smartphone,
-  Mail,
-  Key,
-  ExternalLink,
-  CheckCircle,
-  AlertCircle,
-  Unlink,
-} from 'lucide-react';
+import { User, Bell, Shield, Globe, Key, ExternalLink, CheckCircle, AlertCircle, Unlink } from 'lucide-react';
 import { useMercadoLivreAuth } from '@/hooks/use-mercado-livre-auth';
-import { useAuthStore } from '@/lib/stores/auth';
+// import { useAuthStore } from '@/lib/stores/auth';
 
 export function SettingsOverview() {
   const { isAuthenticated, user, login, logout, isLoading } = useMercadoLivreAuth();
-  const authStore = useAuthStore();
   const [notifications, setNotifications] = useState({
     email: true,
     push: false,

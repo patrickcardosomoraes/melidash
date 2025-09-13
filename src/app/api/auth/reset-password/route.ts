@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     const validatedData = resetPasswordSchema.parse(body);
     console.log('✅ Data validation passed');
     
-    const { token, password: __unused } = validatedData;
+    const { token } = validatedData;
     
     // TODO: Buscar usuário pelo token de reset
     // Por enquanto, vamos simular a busca

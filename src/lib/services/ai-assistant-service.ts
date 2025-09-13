@@ -125,7 +125,7 @@ export class AIAssistantService {
     chat.messages.push(userMessage);
     
     // Simulate AI response
-    const aiResponse = await this.generateAIResponse(content, chat.context);
+    const aiResponse = await this.generateAIResponse(content);
     const assistantMessage: AIChatMessage = {
       id: `${chatId}-${Date.now() + 1}`,
       role: 'assistant',
@@ -139,7 +139,7 @@ export class AIAssistantService {
     return assistantMessage;
   }
 
-  private async generateAIResponse(userMessage: string, context: AIChat['context']): Promise<string> {
+  private async generateAIResponse(userMessage: string): Promise<string> {
     // TODO: Use context to provide more personalized responses
     // Simulate AI processing time
     await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));

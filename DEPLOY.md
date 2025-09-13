@@ -42,9 +42,9 @@
 4. Preencha:
    - **Nome**: `MeliDash`
    - **Descrição**: `Dashboard inteligente para vendedores`
-   - **URL da aplicação**: `https://your-app.vercel.app`
-   - **Domínios autorizados**: `your-app.vercel.app`
-   - **URL de callback**: `https://your-app.vercel.app/api/auth/mercado-livre/callback`
+   - **URL da aplicação**: `https://melidash.vercel.app`
+   - **Domínios autorizados**: `melidash.vercel.app`
+   - **URL de callback**: `https://melidash.vercel.app/api/auth/mercado-livre/callback`
 5. Selecione os scopes:
    - `read` - Leitura de informações
    - `write` - Escrita de informações
@@ -80,25 +80,27 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=[SUPABASE-ANON-KEY]
 SUPABASE_SERVICE_ROLE_KEY=[SUPABASE-SERVICE-ROLE-KEY]
 
 # Mercado Livre API
+NEXT_PUBLIC_ML_CLIENT_ID=[ML-CLIENT-ID]
 ML_CLIENT_ID=[ML-CLIENT-ID]
 ML_CLIENT_SECRET=[ML-CLIENT-SECRET]
-ML_REDIRECT_URI=https://[YOUR-VERCEL-DOMAIN].vercel.app/api/auth/mercado-livre/callback
+NEXT_PUBLIC_ML_REDIRECT_URI=https://melidash.vercel.app/api/auth/mercado-livre/callback
+ML_REDIRECT_URI=https://melidash.vercel.app/api/auth/mercado-livre/callback
 
 # NextAuth
-NEXTAUTH_URL=https://[YOUR-VERCEL-DOMAIN].vercel.app
+NEXTAUTH_URL=https://melidash.vercel.app
 NEXTAUTH_SECRET=[GENERATE-RANDOM-STRING]
 
 # OpenAI (opcional)
 OPENAI_API_KEY=[YOUR-OPENAI-KEY]
 
 # Vercel
-VERCEL_URL=[YOUR-VERCEL-DOMAIN].vercel.app
+VERCEL_URL=melidash.vercel.app
 ```
 
 ### 3.3 Deploy
 1. Clique em "Deploy"
 2. Aguarde o build completar (3-5 minutos)
-3. Anote sua URL da Vercel: `https://your-app-name.vercel.app`
+3. Anote sua URL da Vercel: `https://melidash.vercel.app`
 
 ## 🔧 4. Configurações Pós-Deploy
 
@@ -106,22 +108,22 @@ VERCEL_URL=[YOUR-VERCEL-DOMAIN].vercel.app
 1. Volte ao [Mercado Livre Developers](https://developers.mercadolivre.com.br/)
 2. Edite sua aplicação
 3. Atualize:
-   - **URL da aplicação**: `https://your-app-name.vercel.app`
-   - **Domínios autorizados**: `your-app-name.vercel.app`
-   - **URL de callback**: `https://your-app-name.vercel.app/api/auth/mercado-livre/callback`
+   - **URL da aplicação**: `https://melidash.vercel.app`
+   - **Domínios autorizados**: `melidash.vercel.app`
+   - **URL de callback**: `https://melidash.vercel.app/api/auth/mercado-livre/callback`
 
 ### 4.2 Atualizar Variáveis na Vercel
 1. No painel da Vercel, vá para "Settings" > "Environment Variables"
 2. Atualize:
-   - `ML_REDIRECT_URI`: `https://your-app-name.vercel.app/api/auth/mercado-livre/callback`
-   - `NEXTAUTH_URL`: `https://your-app-name.vercel.app`
-   - `VERCEL_URL`: `your-app-name.vercel.app`
+   - `ML_REDIRECT_URI`: `https://melidash.vercel.app/api/auth/mercado-livre/callback`
+   - `NEXTAUTH_URL`: `https://melidash.vercel.app`
+   - `VERCEL_URL`: `melidash.vercel.app`
 3. Clique em "Redeploy" para aplicar as mudanças
 
 ## ✅ 5. Verificação
 
 ### 5.1 Testar Aplicação
-1. Acesse `https://your-app-name.vercel.app`
+1. Acesse `https://melidash.vercel.app`
 2. Verifique se a página inicial carrega
 3. Teste o login (se implementado)
 4. Acesse `/dashboard` para ver o painel

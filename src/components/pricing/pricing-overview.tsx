@@ -29,7 +29,7 @@ export function PricingOverview() {
   const [rules, setRules] = useState<PricingRule[]>([]);
   const [executions, setExecutions] = useState<PricingExecution[]>([]);
   const [alerts, setAlerts] = useState<PricingAlert[]>([]);
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  // Dialog de criação será implementado futuramente
   const [activeTab, setActiveTab] = useState('overview');
 
   // Simular dados de execução e alertas
@@ -119,9 +119,7 @@ export function PricingOverview() {
     ));
   };
 
-  const deleteRule = (ruleId: string) => {
-    setRules(prev => prev.filter(rule => rule.id !== ruleId));
-  };
+  // Função de deletar regra será conectada quando o CRUD estiver habilitado
 
   const activeRules = rules.filter(rule => rule.isActive);
   const recentExecutions = executions.slice(0, 5);
@@ -150,7 +148,7 @@ export function PricingOverview() {
             <Settings className="mr-2 h-4 w-4" />
             Configurações
           </Button>
-          <Button onClick={() => setIsCreateDialogOpen(true)} size="sm">
+          <Button size="sm">
             <Plus className="mr-2 h-4 w-4" />
             Nova Regra
           </Button>

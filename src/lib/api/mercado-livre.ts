@@ -147,7 +147,7 @@ export class MercadoLivreAPI {
         await this.refreshAccessToken();
         // Repetir a requisição com o novo token
         return this.makeAuthenticatedRequest<T>(endpoint, options);
-      } catch (error) {
+      } catch {
         throw new Error('Falha na autenticação. Faça login novamente.');
       }
     }

@@ -21,7 +21,7 @@ interface ChatPanelProps {
   onRefresh: () => void;
 }
 
-export function ChatPanel({ onRefresh: _ }: ChatPanelProps) {
+export function ChatPanel({ onRefresh }: ChatPanelProps) {
   const [chats, setChats] = useState<AIChat[]>([]);
   const [activeChat, setActiveChat] = useState<AIChat | null>(null);
   const [message, setMessage] = useState('');
@@ -44,11 +44,11 @@ export function ChatPanel({ onRefresh: _ }: ChatPanelProps) {
     } finally {
       setLoading(false);
     }
-  }, [aiService]);
+  }, [aiService, activeChat]);
 
   useEffect(() => {
     loadChats();
-  }, []);
+  }, [loadChats]);
 
   useEffect(() => {
     scrollToBottom();
@@ -65,6 +65,7 @@ export function ChatPanel({ onRefresh: _ }: ChatPanelProps) {
       });
       setChats(prev => [newChat, ...prev]);
       setActiveChat(newChat);
+      onRefresh();
     } catch (error) {
       console.error('Erro ao criar novo chat:', error);
     }

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { ReputationMetrics } from '@/types/reputation';
 import { getReputationService } from '@/lib/services/reputation-service';
 import { Badge } from '@/components/ui/badge';
-import { Thermometer, TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 
 interface ReputationThermometerProps {
   metrics: ReputationMetrics;

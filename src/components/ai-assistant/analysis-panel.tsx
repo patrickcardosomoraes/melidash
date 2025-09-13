@@ -25,7 +25,7 @@ interface AnalysisPanelProps {
   onRefresh: () => void;
 }
 
-export function AnalysisPanel({ onRefresh: _ }: AnalysisPanelProps) {
+export function AnalysisPanel({ onRefresh }: AnalysisPanelProps) {
   const [analyses, setAnalyses] = useState<AIAnalysis[]>([]);
   const [selectedAnalysis, setSelectedAnalysis] = useState<AIAnalysis | null>(null);
   const [loading, setLoading] = useState(true);
@@ -48,7 +48,7 @@ export function AnalysisPanel({ onRefresh: _ }: AnalysisPanelProps) {
 
   useEffect(() => {
     loadAnalyses();
-  }, []);
+  }, [loadAnalyses]);
 
   const filteredAnalyses = analyses.filter(analysis => {
     if (filter === 'all') return true;
@@ -93,6 +93,7 @@ export function AnalysisPanel({ onRefresh: _ }: AnalysisPanelProps) {
       const newAnalysis = await aiService.createAnalysis(type, `target-${Date.now()}`);
       setAnalyses(prev => [newAnalysis, ...prev]);
       setSelectedAnalysis(newAnalysis);
+      onRefresh();
     } catch (error) {
       console.error('Erro ao criar análise:', error);
     } finally {
