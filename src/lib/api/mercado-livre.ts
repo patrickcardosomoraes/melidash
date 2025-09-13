@@ -10,22 +10,39 @@ const getClientId = () => process.env.NEXT_PUBLIC_ML_CLIENT_ID || process.env.ML
 const getClientSecret = () => process.env.ML_CLIENT_SECRET;
 const getRedirectUri = () => process.env.NEXT_PUBLIC_ML_REDIRECT_URI || process.env.ML_REDIRECT_URI;
 
-// Função para validar credenciais
-const validateCredentials = () => {
-  const clientId = getClientId();
-  const clientSecret = getClientSecret();
-  const redirectUri = getRedirectUri();
-  
-  if (!clientId || !clientSecret) {
-    throw new Error('Credenciais do Mercado Livre não configuradas. Defina NEXT_PUBLIC_ML_CLIENT_ID (ou ML_CLIENT_ID) e ML_CLIENT_SECRET.');
+// Helpers de validação (separam cliente e servidor)
+const getEnvConfig = () => ({
+  clientId: getClientId(),
+  clientSecret: getClientSecret(),
+  redirectUri: getRedirectUri()
+});
+
+// Validação para uso no CLIENTE (construir URL de autorização)
+const ensurePublicOAuthConfig = () => {
+  const { clientId, redirectUri } = getEnvConfig();
+  if (!clientId) {
+    throw new Error('Credenciais do Mercado Livre não configuradas. Defina NEXT_PUBLIC_ML_CLIENT_ID (ou ML_CLIENT_ID).');
   }
-  
   if (!redirectUri) {
     throw new Error('REDIRECT_URI do Mercado Livre não configurada. Defina NEXT_PUBLIC_ML_REDIRECT_URI (ou ML_REDIRECT_URI).');
   }
-  
+  return { clientId, redirectUri };
+};
+
+// Validação para uso no SERVIDOR (troca/refresh de tokens)
+const ensureServerOAuthSecrets = () => {
+  const { clientId, clientSecret, redirectUri } = getEnvConfig();
+  if (!clientId) {
+    throw new Error('ML_CLIENT_ID/NEXT_PUBLIC_ML_CLIENT_ID ausente no servidor.');
+  }
+  if (!clientSecret) {
+    throw new Error('ML_CLIENT_SECRET ausente no servidor. Configure ML_CLIENT_SECRET nas variáveis de ambiente.');
+  }
+  if (!redirectUri) {
+    throw new Error('ML_REDIRECT_URI/NEXT_PUBLIC_ML_REDIRECT_URI ausente no servidor.');
+  }
   return { clientId, clientSecret, redirectUri };
-}
+};
 
 export class MercadoLivreAPI {
   private accessToken: string | null = null;
@@ -38,7 +55,8 @@ export class MercadoLivreAPI {
 
   // Gerar URL de autorização OAuth
   getAuthUrl(state?: string): string {
-    const { clientId, redirectUri } = validateCredentials();
+    // No cliente, não exigir o client_secret
+    const { clientId, redirectUri } = ensurePublicOAuthConfig();
     
     const params = new URLSearchParams({
       response_type: 'code',
@@ -57,7 +75,7 @@ export class MercadoLivreAPI {
 
   // Trocar código de autorização por tokens
   async exchangeCodeForTokens(code: string): Promise<MLTokenData> {
-    const { clientId, clientSecret, redirectUri } = validateCredentials();
+    const { clientId, clientSecret, redirectUri } = ensureServerOAuthSecrets();
     
     const response = await fetch('https://api.mercadolibre.com/oauth/token', {
       method: 'POST',
@@ -91,7 +109,7 @@ export class MercadoLivreAPI {
       throw new Error('Refresh token não disponível');
     }
 
-    const { clientId, clientSecret } = validateCredentials();
+    const { clientId, clientSecret } = ensureServerOAuthSecrets();
 
     const response = await fetch(`${ML_API_BASE_URL}/oauth/token`, {
       method: 'POST',
